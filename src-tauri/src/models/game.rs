@@ -8,6 +8,7 @@ pub struct Game {
     pub description: String, 
 }
 
+#[derive(Debug, Deserialize, FromRow, Serialize, Clone)]
 pub struct GameDto {
     pub name: String,
     pub description: String,
