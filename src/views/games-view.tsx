@@ -8,6 +8,7 @@ import { Label } from '@/components/ui/label';
 import { useState } from 'react';
 import GameCard from '@/components/game-card';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination';
 
 function GamesView() {
   const queryClient = useQueryClient();
@@ -110,12 +111,38 @@ function onLoading() {
 function readGames(data: Page<Game>) {
   console.log('data :>> ', data);
   return (
-    <div className='grid grid-cols-5 gap-1 pb-4 border-b'>
-      {data.items.map((game) => {
-        console.log('game.picture :>> ', game.picture);
-        return <GameCard title={game.name} img={game.picture} />;
-      })}
-    </div>
+    <>
+      <div className='grid grid-cols-5 gap-1 pb-4 border-b'>
+        {data.items.map((game) => {
+          console.log('game.picture :>> ', game.picture);
+          return <GameCard title={game.name} img={game.picture} />;
+        })}
+      </div>
+      <Pagination>
+        <PaginationContent>
+          <PaginationItem>
+            <PaginationPrevious href='#' />
+          </PaginationItem>
+          <PaginationItem>
+            <PaginationLink href='#'>1</PaginationLink>
+          </PaginationItem>
+          <PaginationItem>
+            <PaginationLink href='#' isActive>
+              2
+            </PaginationLink>
+          </PaginationItem>
+          <PaginationItem>
+            <PaginationLink href='#'>3</PaginationLink>
+          </PaginationItem>
+          <PaginationItem>
+            <PaginationEllipsis />
+          </PaginationItem>
+          <PaginationItem>
+            <PaginationNext href='#' />
+          </PaginationItem>
+        </PaginationContent>
+      </Pagination>
+    </>
   );
 }
 
