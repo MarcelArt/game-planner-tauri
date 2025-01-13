@@ -1,4 +1,4 @@
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { invoke } from '@tauri-apps/api/core';
 
 import { Button } from '@/components/ui/button';
@@ -6,6 +6,9 @@ import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogT
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useState } from 'react';
+import GameCard from '@/components/game-card';
+import { Skeleton } from '@/components/ui/skeleton';
+import delay from '@/utils/delay';
 
 function GamesView() {
   const createGame = useMutation({
@@ -17,6 +20,11 @@ function GamesView() {
     onError: (err) => {
       console.log('err :>> ', err);
     },
+  });
+
+  const { isPending, data } = useQuery({
+    queryKey: ['games'],
+    queryFn: () => invoke('read_game', { page: 0, limit: 20 }),
   });
 
   const [name, setName] = useState('');
@@ -56,6 +64,49 @@ function GamesView() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+      {isPending ? onLoading() : readGames(data as Page<Game>)}
+    </div>
+  );
+}
+
+function onLoading() {
+  return (
+    <div className='grid grid-cols-5 gap-1 pb-4 border-b'>
+      {/* <GameCard
+        img='https://www.minecraft.net/content/dam/minecraftnet/games/minecraft/key-art/Vanilla-PMP_Collection-Carousel-0_Buzzy-Bees_1280x768.jpg'
+        title='Minecraft'
+      /> */}
+      <Skeleton className='aspect-[16/9] h-[180px] rounded-lg' />
+      <Skeleton className='aspect-[16/9] h-[180px] rounded-lg' />
+      <Skeleton className='aspect-[16/9] h-[180px] rounded-lg' />
+      <Skeleton className='aspect-[16/9] h-[180px] rounded-lg' />
+      <Skeleton className='aspect-[16/9] h-[180px] rounded-lg' />
+      <Skeleton className='aspect-[16/9] h-[180px] rounded-lg' />
+      <Skeleton className='aspect-[16/9] h-[180px] rounded-lg' />
+      <Skeleton className='aspect-[16/9] h-[180px] rounded-lg' />
+      <Skeleton className='aspect-[16/9] h-[180px] rounded-lg' />
+      <Skeleton className='aspect-[16/9] h-[180px] rounded-lg' />
+      <Skeleton className='aspect-[16/9] h-[180px] rounded-lg' />
+      <Skeleton className='aspect-[16/9] h-[180px] rounded-lg' />
+      <Skeleton className='aspect-[16/9] h-[180px] rounded-lg' />
+      <Skeleton className='aspect-[16/9] h-[180px] rounded-lg' />
+      <Skeleton className='aspect-[16/9] h-[180px] rounded-lg' />
+      <Skeleton className='aspect-[16/9] h-[180px] rounded-lg' />
+      <Skeleton className='aspect-[16/9] h-[180px] rounded-lg' />
+      <Skeleton className='aspect-[16/9] h-[180px] rounded-lg' />
+      <Skeleton className='aspect-[16/9] h-[180px] rounded-lg' />
+      <Skeleton className='aspect-[16/9] h-[180px] rounded-lg' />
+    </div>
+  );
+}
+
+function readGames(data: Page<Game>) {
+  return (
+    <div className='grid grid-cols-5 gap-1 pb-4 border-b'>
+      {data.items.map((game) => {
+        console.log('game.picture :>> ', game.picture);
+        return <GameCard title={game.name} img={game.picture} />;
+      })}
     </div>
   );
 }

@@ -1,3 +1,6 @@
+use core::time;
+use std::thread;
+
 use sqlx::Pool;
 use uuid::Uuid;
 
@@ -19,7 +22,7 @@ impl GameRepo {
 
         let game = sqlx::query_as!(
             Game,
-            "INSERT INTO games (name, description, id) VALUES ($1, $2, $3) RETURNING id, name, description",
+            "INSERT INTO games (name, description, id) VALUES ($1, $2, $3) RETURNING id, name, description, picture",
             name,
             description,
             id,
@@ -35,7 +38,7 @@ impl GameRepo {
         let items = sqlx::query_as!(
             Game,
             "
-                SELECT id, name, description FROM games
+                SELECT id, name, description, picture FROM games
                 limit $1 offset $2
             ",
             limit,
