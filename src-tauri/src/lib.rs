@@ -17,6 +17,7 @@ pub async fn run() {
         .plugin(tauri_plugin_opener::init())
         .invoke_handler(tauri::generate_handler![greet])
         .invoke_handler(tauri::generate_handler![handlers::game_handler::create_game])
+        .invoke_handler(tauri::generate_handler![handlers::game_handler::read_game])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

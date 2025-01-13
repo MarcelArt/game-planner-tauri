@@ -14,7 +14,7 @@ function GamesView() {
       return invoke('create_game', { input });
     },
     onSuccess: () => {},
-    onError: (err, variable, ctx) => {
+    onError: (err) => {
       console.log('err :>> ', err);
     },
   });

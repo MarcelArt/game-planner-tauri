@@ -1,7 +1,7 @@
 use sqlx::Pool;
 use uuid::Uuid;
 
-use crate::models::game::{Game, GameDto};
+use crate::models::{game::{Game, GameDto}, page::Page};
 
 pub struct GameRepo {
     db: Pool<sqlx::Sqlite>
@@ -30,13 +30,27 @@ impl GameRepo {
         Ok(game)
     }
 
-    pub async fn read(&self) -> Result<Vec<Game>, sqlx::Error> {
-        let games = sqlx::query_as!(
+    pub async fn read(&self, limit: i32, page: i32) -> Result<Page<Game>, sqlx::Error> {
+        let offset = limit * page;
+        let items = sqlx::query_as!(
             Game,
-            "SELECT id, name, description FROM games"
+            "
+                SELECT id, name, description FROM games
+                limit $1 offset $2
+            ",
+            limit,
+            offset,
         )
             .fetch_all(&self.db)
             .await?;
+
+        let total  = sqlx::query_scalar!(
+            "SELECT COUNT(*) as count from games",
+        )
+            .fetch_one(&self.db)
+            .await?;
+
+        let games = Page::<Game> { items, total };
 
         Ok(games)
     }
