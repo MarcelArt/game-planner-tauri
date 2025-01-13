@@ -1,6 +1,3 @@
-use core::time;
-use std::thread;
-
 use sqlx::Pool;
 use uuid::Uuid;
 
@@ -16,16 +13,15 @@ impl GameRepo {
     }
 
     pub async fn create(&self, input: GameDto) -> Result<Game, sqlx::Error> {
-        let name = input.name;
-        let description = input.description;
         let id = Uuid::new_v4().to_string();
 
         let game = sqlx::query_as!(
             Game,
-            "INSERT INTO games (name, description, id) VALUES ($1, $2, $3) RETURNING id, name, description, picture",
-            name,
-            description,
+            "INSERT INTO games (id, name, description, picture) VALUES ($1, $2, $3, $4) RETURNING id, name, description, picture",
             id,
+            input.name,
+            input.description,
+            input.picture,
         )
             .fetch_one(&self.db)
             .await?;

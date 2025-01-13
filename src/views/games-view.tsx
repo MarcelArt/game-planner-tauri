@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { invoke } from '@tauri-apps/api/core';
 
 import { Button } from '@/components/ui/button';
@@ -8,15 +8,15 @@ import { Label } from '@/components/ui/label';
 import { useState } from 'react';
 import GameCard from '@/components/game-card';
 import { Skeleton } from '@/components/ui/skeleton';
-import delay from '@/utils/delay';
 
 function GamesView() {
+  const queryClient = useQueryClient();
   const createGame = useMutation({
     mutationFn: (input: GameDto) => {
       console.log('input :>> ', input);
       return invoke('create_game', { input });
     },
-    onSuccess: () => {},
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['games'] }),
     onError: (err) => {
       console.log('err :>> ', err);
     },
@@ -29,6 +29,7 @@ function GamesView() {
 
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
+  const [pictureUrl, setPictureUrl] = useState('');
 
   return (
     <div className='h-full w-full flex flex-col mx-4 items-start space-y-2'>
@@ -54,10 +55,16 @@ function GamesView() {
               </Label>
               <Input id='description' value={description} className='col-span-3' onChange={(e) => setDescription(e.target.value)} />
             </div>
+            <div className='grid grid-cols-4 items-center gap-4'>
+              <Label htmlFor='picture' className='text-right'>
+                Picture URL
+              </Label>
+              <Input id='picture' value={pictureUrl} className='col-span-3' onChange={(e) => setPictureUrl(e.target.value)} />
+            </div>
           </div>
           <DialogFooter>
             <DialogClose asChild>
-              <Button type='submit' onClick={() => createGame.mutate({ name, description })}>
+              <Button type='submit' onClick={() => createGame.mutate({ name, description, picture: pictureUrl })}>
                 Save changes
               </Button>
             </DialogClose>
@@ -101,6 +108,7 @@ function onLoading() {
 }
 
 function readGames(data: Page<Game>) {
+  console.log('data :>> ', data);
   return (
     <div className='grid grid-cols-5 gap-1 pb-4 border-b'>
       {data.items.map((game) => {

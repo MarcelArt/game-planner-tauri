@@ -8,6 +8,7 @@ interface Game {
 interface GameDto {
     name: string;
     description: string;
+    picture: string;
 }
 
 // export { Game, GameDto };
