@@ -8,29 +8,30 @@ import { Label } from '@/components/ui/label';
 import { useState } from 'react';
 import GameCard from '@/components/game-card';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination';
+import Paginator from '@/components/paginator';
 
 function GamesView() {
+  const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
+  const [pictureUrl, setPictureUrl] = useState('');
+  const [page, setPage] = useState(0);
+
   const queryClient = useQueryClient();
   const createGame = useMutation({
     mutationFn: (input: GameDto) => {
       console.log('input :>> ', input);
       return invoke('create_game', { input });
     },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['games'] }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['games', page] }),
     onError: (err) => {
       console.log('err :>> ', err);
     },
   });
 
   const { isPending, data } = useQuery({
-    queryKey: ['games'],
-    queryFn: () => invoke('read_game', { page: 0, limit: 20 }),
+    queryKey: ['games', page],
+    queryFn: () => invoke('read_game', { page, limit: 20 }),
   });
-
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
-  const [pictureUrl, setPictureUrl] = useState('');
 
   return (
     <div className='h-full w-full flex flex-col mx-4 items-start space-y-2'>
@@ -72,7 +73,11 @@ function GamesView() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-      {isPending ? onLoading() : readGames(data as Page<Game>)}
+      {isPending
+        ? onLoading()
+        : readGames(data as Page<Game>, page, (p) => {
+            setPage(p);
+          })}
     </div>
   );
 }
@@ -108,7 +113,7 @@ function onLoading() {
   );
 }
 
-function readGames(data: Page<Game>) {
+function readGames(data: Page<Game>, page: number, setPage: (p: number) => void) {
   console.log('data :>> ', data);
   return (
     <>
@@ -118,30 +123,7 @@ function readGames(data: Page<Game>) {
           return <GameCard title={game.name} img={game.picture} />;
         })}
       </div>
-      <Pagination>
-        <PaginationContent>
-          <PaginationItem>
-            <PaginationPrevious href='#' />
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink href='#'>1</PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink href='#' isActive>
-              2
-            </PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink href='#'>3</PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationEllipsis />
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationNext href='#' />
-          </PaginationItem>
-        </PaginationContent>
-      </Pagination>
+      <Paginator page={page} limit={20} onClickPage={setPage} total={data.total} />
     </>
   );
 }
