@@ -3,16 +3,47 @@ import { Button } from "./ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "./ui/card";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { invoke } from "@tauri-apps/api/core";
+import { useToast } from "@/hooks/use-toast";
 
-function UpdateGame() {
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
+interface UpdateGameProps {
+  title: string;
+  description: string;
+  picture: string;
+  gameId: string;
+}
+
+function UpdateGame(props: UpdateGameProps) {
+  const [title, setTitle] = useState(props.title);
+  const [description, setDescription] = useState(props.description);
+  const { toast } = useToast();
+  const queryClient = useQueryClient()
+
+  const updateGame = useMutation({
+    mutationFn: () => invoke('update_game', { 
+      id: props.gameId, 
+      input: { 
+        name: title, 
+        description,
+        picture: props.picture,
+      },
+    }),
+    onSuccess: () => {
+      toast({
+        title: 'Update success',
+        description: `Updated game ${title} data`,
+        variant: "default",
+      })
+      queryClient.invalidateQueries({ queryKey: ['game', props.gameId] })
+    }
+  })
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Game</CardTitle>
-        <CardDescription>Update Game</CardDescription>
+        <CardTitle>{props.title}</CardTitle>
+        <CardDescription>Update {props.title} data</CardDescription>
       </CardHeader>
       <CardContent className='space-y-2'>
         <div className='space-y-1'>
@@ -25,7 +56,7 @@ function UpdateGame() {
         </div>
       </CardContent>
       <CardFooter>
-        <Button>Save changes</Button>
+        <Button onClick={() => updateGame.mutate()}>Save changes</Button>
       </CardFooter>
     </Card>
   );

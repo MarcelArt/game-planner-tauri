@@ -53,4 +53,29 @@ impl GameRepo {
 
         Ok(games)
     }
+
+    pub async fn get_by_id(&self, id: String) -> Result<Game, sqlx::Error> {
+        let game = sqlx::query_as!(
+            Game,
+            "SELECT id, name, description, picture FROM games WHERE id = $1",
+            id,
+        )
+            .fetch_one(&self.db)
+            .await?;
+
+        Ok(game)
+    }
+
+    pub async fn update(&self, id: String, input: GameDto) -> Result<(), sqlx::Error> {
+        _ = sqlx::query!(
+            "
+                UPDATE games
+                SET name = $1, description = $2, picture = $3
+                WHERE id = $4
+            ",
+            input.name, input.description, input.picture, id
+        ).execute(&self.db).await?;
+
+        Ok(())
+    }
 }

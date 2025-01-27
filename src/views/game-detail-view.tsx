@@ -4,8 +4,27 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import UpdateGame from '@/components/update-game';
+import { useQuery } from '@tanstack/react-query';
+import { invoke } from '@tauri-apps/api/core';
+import { useParams } from 'react-router';
 
 function GameDetailView() {
+  const { gameId } = useParams();
+  console.log('gameId :>> ', gameId);
+
+  const { data, isPending } = useQuery({
+    queryKey: ['game', gameId],
+    queryFn: () => invoke('get_game_by_id', { id: gameId }),
+  });
+
+  const renderUpdateGame = () => {
+    if (isPending || !gameId) {
+      return null;
+    }
+    const game = data as Game;
+    return <UpdateGame title={game.name} description={game.description} picture={game.picture} gameId={gameId} />;
+  }
+
   return (
     <div className='flex flex-col items-center space-y-4 w-full'>
       <h1 className='font-bold text-2xl'>Game</h1> 
@@ -15,7 +34,7 @@ function GameDetailView() {
           <TabsTrigger value='password'>Password</TabsTrigger>
         </TabsList>
         <TabsContent value='game'>
-          <UpdateGame />
+          {renderUpdateGame()}
         </TabsContent>
         <TabsContent value='password'>
           <Card>
