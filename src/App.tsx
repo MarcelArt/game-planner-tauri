@@ -11,6 +11,7 @@ import { ThemeProvider } from './components/theme-provider';
 import Layout from './app/layout';
 import GamesView from './views/games-view';
 import InventoryView from './views/inventory-view';
+import GameDetailView from './views/game-detail-view';
 
 const queryClient = new QueryClient();
 
@@ -31,6 +32,7 @@ function App() {
             <BrowserRouter>
               <Routes>
                 <Route path="/" element={<GamesView />} />
+                <Route path="/game/:gameId" element={<GameDetailView />} />
                 <Route path="/inventory" element={<InventoryView />} />
               </Routes>
             </BrowserRouter>

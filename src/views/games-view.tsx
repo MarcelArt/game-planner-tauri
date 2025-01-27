@@ -9,6 +9,7 @@ import { useState } from 'react';
 import GameCard from '@/components/game-card';
 import { Skeleton } from '@/components/ui/skeleton';
 import Paginator from '@/components/paginator';
+import { Link } from 'react-router';
 
 function GamesView() {
   const [name, setName] = useState('');
@@ -120,7 +121,11 @@ function readGames(data: Page<Game>, page: number, setPage: (p: number) => void)
       <div className='grid grid-cols-5 gap-1 pb-4 border-b'>
         {data.items.map((game) => {
           console.log('game.picture :>> ', game.picture);
-          return <GameCard title={game.name} img={game.picture} />;
+          return (
+            <Link to={`/game/${game.id}`} key={game.id}>
+              <GameCard title={game.name} img={game.picture} />
+            </Link>
+          );
         })}
       </div>
       <Paginator page={page} limit={20} onClickPage={setPage} total={data.total} />
