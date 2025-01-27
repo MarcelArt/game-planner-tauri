@@ -11,21 +11,25 @@ import {
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
 
-// Menu items.
-const items = [
-  {
-    title: 'Games',
-    url: '/',
-    icon: Home,
-  },
-  {
-    title: 'Inventory',
-    url: '/inventory',
-    icon: Inbox,
-  },
-];
+interface SidebarProp {
+  gameId: string;
+}
 
-export function AppSidebar() {
+// Menu items.
+
+export function AppSidebar(props: SidebarProp) {
+  const items = [
+    {
+      title: 'Games',
+      url: '/',
+      icon: Home,
+    },
+    {
+      title: 'Update Game Data',
+      url: `/game/${props.gameId}/update`,
+      icon: Inbox,
+    },
+  ];
   return (
     <Sidebar>
       <SidebarContent>

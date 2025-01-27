@@ -1,16 +1,20 @@
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
-import { AppSidebar } from "@/components/app-sidebar"
-import { Toaster } from "@/components/ui/toaster"
+import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
+import { AppSidebar } from '@/components/app-sidebar';
+import { Toaster } from '@/components/ui/toaster';
+import { useParams } from 'react-router';
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-  return (
+  const { gameId } = useParams();
+  console.log('gameId :>> ', gameId);
+
+  return gameId ? (
     <SidebarProvider>
-      <AppSidebar />
-      <main className="w-screen h-screen">
+      <AppSidebar gameId={gameId} />
+      <main className='w-screen h-screen'>
         <SidebarTrigger />
         {children}
       </main>
       <Toaster />
     </SidebarProvider>
-  )
+  ) : null;
 }

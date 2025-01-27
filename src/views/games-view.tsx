@@ -122,7 +122,7 @@ function readGames(data: Page<Game>, page: number, setPage: (p: number) => void)
         {data.items.map((game) => {
           console.log('game.picture :>> ', game.picture);
           return (
-            <Link to={`/game/${game.id}`} key={game.id}>
+            <Link to={`/game/${game.id}/update`} key={game.id}>
               <GameCard title={game.name} img={game.picture} />
             </Link>
           );

@@ -10,7 +10,6 @@ import { useParams } from 'react-router';
 
 function GameDetailView() {
   const { gameId } = useParams();
-  console.log('gameId :>> ', gameId);
 
   const { data, isPending } = useQuery({
     queryKey: ['game', gameId],

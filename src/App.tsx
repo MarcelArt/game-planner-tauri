@@ -1,17 +1,15 @@
 // import { useState } from 'react';
 // import { invoke } from '@tauri-apps/api/core';
 import './App.css';
-import { BrowserRouter, Route, Routes } from "react-router";
-import {
-  QueryClient,
-  QueryClientProvider,
-} from '@tanstack/react-query'
+import { BrowserRouter, Route, Routes } from 'react-router';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import { ThemeProvider } from './components/theme-provider';
 import Layout from './app/layout';
 import GamesView from './views/games-view';
 import InventoryView from './views/inventory-view';
 import GameDetailView from './views/game-detail-view';
+import UpdateGameView from './views/update-game-view';
 
 const queryClient = new QueryClient();
 
@@ -28,15 +26,35 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider defaultTheme='dark' storageKey='vite-ui-theme'>
         <div className='w-full h-screen'>
-          <Layout>
-            <BrowserRouter>
-              <Routes>
-                <Route path="/" element={<GamesView />} />
-                <Route path="/game/:gameId" element={<GameDetailView />} />
-                <Route path="/inventory" element={<InventoryView />} />
-              </Routes>
-            </BrowserRouter>
-          </Layout>
+          <BrowserRouter>
+            <Routes>
+              <Route path='/' element={<GamesView />} />
+              <Route
+                path='/game/:gameId'
+                element={
+                  <Layout>
+                    <GameDetailView />
+                  </Layout>
+                }
+              />
+              <Route
+                path='/game/:gameId/update'
+                element={
+                  <Layout>
+                    <UpdateGameView />
+                  </Layout>
+                }
+              />
+              <Route
+                path='/inventory'
+                element={
+                  <Layout>
+                    <InventoryView />
+                  </Layout>
+                }
+              />
+            </Routes>
+          </BrowserRouter>
         </div>
       </ThemeProvider>
     </QueryClientProvider>
