@@ -32,8 +32,8 @@ function GamesView() {
   });
 
   return (
-    <div className='h-full w-full flex flex-col mx-4 items-start space-y-2'>
-      <h1 className='font-bold text-2xl'>Games</h1>
+    <div className='h-full w-full flex flex-col mx-20 items-start space-y-2'>
+      <h1 className='font-bold text-2xl mt-4'>Games</h1>
       <Dialog>
         <DialogTrigger asChild>
           <Button>Create</Button>
