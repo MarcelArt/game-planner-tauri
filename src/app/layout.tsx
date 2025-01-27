@@ -5,7 +5,6 @@ import { useParams } from 'react-router';
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const { gameId } = useParams();
-  console.log('gameId :>> ', gameId);
 
   return gameId ? (
     <SidebarProvider>

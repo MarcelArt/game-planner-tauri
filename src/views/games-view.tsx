@@ -1,5 +1,4 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { invoke } from '@tauri-apps/api/core';
 
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
@@ -10,6 +9,7 @@ import GameCard from '@/components/game-card';
 import { Skeleton } from '@/components/ui/skeleton';
 import Paginator from '@/components/paginator';
 import { Link } from 'react-router';
+import gameApi from '@/api/game.api';
 
 function GamesView() {
   const [name, setName] = useState('');
@@ -19,10 +19,7 @@ function GamesView() {
 
   const queryClient = useQueryClient();
   const createGame = useMutation({
-    mutationFn: (input: GameDto) => {
-      console.log('input :>> ', input);
-      return invoke('create_game', { input });
-    },
+    mutationFn: (input: GameDto) => gameApi.create(input),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['games', page] }),
     onError: (err) => {
       console.log('err :>> ', err);
@@ -31,7 +28,7 @@ function GamesView() {
 
   const { isPending, data } = useQuery({
     queryKey: ['games', page],
-    queryFn: () => invoke('read_game', { page, limit: 20 }),
+    queryFn: () => gameApi.read(page, 20),
   });
 
   return (

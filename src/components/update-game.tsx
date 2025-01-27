@@ -4,8 +4,8 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { invoke } from "@tauri-apps/api/core";
 import { useToast } from "@/hooks/use-toast";
+import gameApi from "@/api/game.api";
 
 interface UpdateGameProps {
   title: string;
@@ -21,13 +21,10 @@ function UpdateGame(props: UpdateGameProps) {
   const queryClient = useQueryClient()
 
   const updateGame = useMutation({
-    mutationFn: () => invoke('update_game', { 
-      id: props.gameId, 
-      input: { 
-        name: title, 
-        description,
-        picture: props.picture,
-      },
+    mutationFn: () => gameApi.update(props.gameId, { 
+      name: title, 
+      description,
+      picture: props.picture,
     }),
     onSuccess: () => {
       toast({

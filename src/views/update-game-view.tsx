@@ -1,6 +1,6 @@
+import gameApi from '@/api/game.api';
 import UpdateGame from '@/components/update-game';
-import { useQuery } from '@tanstack/react-query';
-import { invoke } from '@tauri-apps/api/core';
+import { useQuery } from '@tanstack/react-query'
 import { useParams } from 'react-router';
 
 function UpdateGameView() {
@@ -8,7 +8,7 @@ function UpdateGameView() {
 
   const { data, isPending } = useQuery({
     queryKey: ['game', gameId],
-    queryFn: () => invoke('get_game_by_id', { id: gameId }),
+    queryFn: () => gameApi.getById(gameId!),
   });
 
   const renderUpdateGame = () => {
