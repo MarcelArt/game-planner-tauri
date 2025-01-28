@@ -1,11 +1,12 @@
 import gameApi from '@/api/game.api';
-import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router';
 import ItemCard from '@/components/item-card';
 import { useState } from 'react';
 import itemApi from '@/api/item.api';
+import Paginator from '@/components/paginator';
+import CreateItemDialog from '@/components/create-item-dialog';
 
 export default function ItemsView() {
   const { gameId } = useParams();
@@ -29,14 +30,16 @@ export default function ItemsView() {
           <CardDescription>All available {gameQuery.data?.name} items</CardDescription>
         </CardHeader>
         <CardContent className='space-y-2'>
-          <Button>Create</Button>
+          <CreateItemDialog gameId={gameId!} />
           <div className='grid grid-cols-5 gap-2'>
             {itemsQuery.data?.items.map((item) => (
               <ItemCard name={item.name} picture={item.picture} />
             ))}
           </div>
         </CardContent>
-        <CardFooter></CardFooter>
+        <CardFooter>
+          <Paginator page={page} limit={20} onClickPage={setPage} total={itemsQuery.data?.total!} />
+        </CardFooter>
       </Card>
     </div>
   );
