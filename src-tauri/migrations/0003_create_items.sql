@@ -1,0 +1,7 @@
+CREATE TABLE items (
+  id VARCHAR(255) PRIMARY KEY NOT NULL,
+  name VARCHAR(255) NOT NULL,
+  picture VARCHAR(255),
+  game_id VARCHAR(255) NOT NULL,
+  FOREIGN KEY (game_id) REFERENCES games(id)
+);

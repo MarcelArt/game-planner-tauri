@@ -21,6 +21,10 @@ pub async fn run() {
             handlers::game_handler::read_game,
             handlers::game_handler::get_game_by_id,
             handlers::game_handler::update_game,
+            handlers::item_handler::create_item,
+            handlers::item_handler::read_items,
+            handlers::item_handler::get_item_by_id,
+            handlers::item_handler::update_item,
         ])
         // .invoke_handler(tauri::generate_handler![handlers::game_handler::read_game])
         .run(tauri::generate_context!())
