@@ -6,8 +6,8 @@ import { Label } from './ui/label';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import itemApi from '@/api/item.api';
 import { useToast } from '@/hooks/use-toast';
-import { FaFileImage } from 'react-icons/fa';
 import { imagePicker } from '@/utils/fs';
+import ItemImagePicker from './item-image-picker';
 
 interface CreateItemDialogProps {
   gameId: string;
@@ -50,11 +50,7 @@ export default function CreateItemDialog(props: CreateItemDialogProps) {
           <DialogTitle>Create Item</DialogTitle>
         </DialogHeader>
         <div className='grid gap-4 py-4'>
-          <div className='flex flex-col w-full items-center'>
-            <Button id='image' className='w-24 h-24 bg-background border-2 border-accent hover:bg-accent' onClick={() => imagePicker({ setBase64, setPicture })}>
-              {base64 ? <img src={base64}/> : <FaFileImage />}
-            </Button>
-          </div>
+          <ItemImagePicker base64={base64} onClick={() => imagePicker({ setBase64, setPicture })} />
           <div className='grid grid-cols-4 items-center gap-4'>
             <Label htmlFor='name' className='text-right'>
               Name

@@ -33,7 +33,7 @@ export default function ItemsView() {
           <CreateItemDialog gameId={gameId!} />
           <div className='grid grid-cols-5 gap-2'>
             {itemsQuery.data?.items.map((item) => (
-              <ItemCard name={item.name} picture={(item.picture_b64)} />
+              <ItemCard item={item} />
             ))}
           </div>
         </CardContent>
