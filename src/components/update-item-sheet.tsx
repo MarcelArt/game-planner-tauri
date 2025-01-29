@@ -8,6 +8,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import itemApi from '@/api/item.api';
 import ItemImagePicker from './item-image-picker';
 import { useToast } from '@/hooks/use-toast';
+import { Separator } from './ui/separator';
 
 interface UpdateItemSheetProps {
   item: Item;
@@ -35,8 +36,8 @@ export default function UpdateItemSheet({ item }: UpdateItemSheetProps) {
         description: `Updated item ${name} data`,
         variant: 'default',
       });
-      queryClient.invalidateQueries({ queryKey: ['items', item.game_id] })
-    }
+      queryClient.invalidateQueries({ queryKey: ['items', item.game_id] });
+    },
   });
 
   return (
@@ -54,10 +55,20 @@ export default function UpdateItemSheet({ item }: UpdateItemSheetProps) {
           <Input id='name' value={name} className='col-span-3' onChange={(e) => setName(e.target.value)} />
         </div>
       </div>
+      <div className='w-full flex justify-end'>
+        <Button type='submit' onClick={() => updateItem.mutate()}>
+          Save changes
+        </Button>
+      </div>
+      <Separator className="my-4" />
+      <h2 className='font-bold'>{item.name} Recipes</h2>
+      <div className='w-full flex justify-end'>
+        <Button type='submit' variant='secondary'>
+          Add Recipe
+        </Button>
+      </div>
       <SheetFooter>
-        <SheetClose asChild>
-          <Button type='submit' onClick={() => updateItem.mutate()}>Save changes</Button>
-        </SheetClose>
+        <SheetClose asChild></SheetClose>
       </SheetFooter>
     </>
   );
