@@ -10,11 +10,14 @@ import { Skeleton } from '@/components/ui/skeleton';
 import Paginator from '@/components/paginator';
 import { Link } from 'react-router';
 import gameApi from '@/api/game.api';
+import { imagePicker } from '@/utils/fs';
+import { FaFileImage } from 'react-icons/fa';
 
 function GamesView() {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [pictureUrl, setPictureUrl] = useState('');
+  const [pictureB64, setPictureB64] = useState('');
   const [page, setPage] = useState(0);
 
   const queryClient = useQueryClient();
@@ -43,6 +46,11 @@ function GamesView() {
             <DialogTitle>Create Game</DialogTitle>
           </DialogHeader>
           <div className='grid gap-4 py-4'>
+            <div className='flex flex-col w-full items-center'>
+              <Button id='image' className='aspect-[16/9] h-[230px] bg-background border-2 border-accent hover:bg-accent' onClick={() => imagePicker({ setBase64: setPictureB64, setPicture: setPictureUrl })}>
+                {pictureB64 ? <img src={pictureB64}/> : <FaFileImage />}
+              </Button>
+            </div>
             <div className='grid grid-cols-4 items-center gap-4'>
               <Label htmlFor='name' className='text-right'>
                 Name
@@ -54,12 +62,6 @@ function GamesView() {
                 Description
               </Label>
               <Input id='description' value={description} className='col-span-3' onChange={(e) => setDescription(e.target.value)} />
-            </div>
-            <div className='grid grid-cols-4 items-center gap-4'>
-              <Label htmlFor='picture' className='text-right'>
-                Picture URL
-              </Label>
-              <Input id='picture' value={pictureUrl} className='col-span-3' onChange={(e) => setPictureUrl(e.target.value)} />
             </div>
           </div>
           <DialogFooter>
@@ -120,7 +122,7 @@ function readGames(data: Page<Game>, page: number, setPage: (p: number) => void)
           console.log('game.picture :>> ', game.picture);
           return (
             <Link to={`/game/${game.id}/update`} key={game.id}>
-              <GameCard title={game.name} img={game.picture} />
+              <GameCard title={game.name} img={game.picture_b64} />
             </Link>
           );
         })}

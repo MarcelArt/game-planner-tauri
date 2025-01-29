@@ -3,6 +3,7 @@ interface Game {
     name: string;
     description: string;
     picture: string;
+    picture_b64: string;
 }
 
 interface GameDto {
