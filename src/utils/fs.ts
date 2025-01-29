@@ -1,5 +1,6 @@
 import { open } from '@tauri-apps/plugin-dialog';
-import { readFile } from '@tauri-apps/plugin-fs';
+import { BaseDirectory, readFile } from '@tauri-apps/plugin-fs';
+
 
 interface ImagePickerParam {
   setPicture: (p: string) => void;
@@ -29,10 +30,16 @@ export async function imagePicker({ setPicture, setBase64 }: ImagePickerParam) {
 }
 
 export async function readFileAsBase64(file: string): Promise<string> {
-  const binary = await readFile(file);
-  const base64String = `data:image/${file.split('.').pop()};base64,${btoa(
-    new Uint8Array(binary).reduce((data, byte) => data + String.fromCharCode(byte), '')
-  )}`;
-
-  return base64String;
+  try {
+    const binary = await readFile(file);
+    const base64String = `data:image/${file.split('.').pop()};base64,${btoa(
+      new Uint8Array(binary).reduce((data, byte) => data + String.fromCharCode(byte), '')
+    )}`;
+  
+    return base64String;
+  }
+  catch(e) {
+    console.log(`error ${file}`, e);
+    throw e;
+  }
 }
