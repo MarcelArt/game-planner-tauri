@@ -6,6 +6,8 @@ import { Label } from './ui/label';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import itemApi from '@/api/item.api';
 import { useToast } from '@/hooks/use-toast';
+import { FaFileImage } from 'react-icons/fa';
+import { imagePicker } from '@/utils/fs';
 
 interface CreateItemDialogProps {
   gameId: string;
@@ -14,6 +16,8 @@ interface CreateItemDialogProps {
 export default function CreateItemDialog(props: CreateItemDialogProps) {
   const [name, setName] = useState('');
   const [picture, setPicture] = useState('');
+  const [base64, setBase64] = useState('');
+
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -46,17 +50,16 @@ export default function CreateItemDialog(props: CreateItemDialogProps) {
           <DialogTitle>Create Item</DialogTitle>
         </DialogHeader>
         <div className='grid gap-4 py-4'>
+          <div className='flex flex-col w-full items-center'>
+            <Button id='image' className='w-24 h-24 bg-background border-2 border-accent hover:bg-accent' onClick={() => imagePicker({ setBase64, setPicture })}>
+              {base64 ? <img src={base64}/> : <FaFileImage />}
+            </Button>
+          </div>
           <div className='grid grid-cols-4 items-center gap-4'>
             <Label htmlFor='name' className='text-right'>
               Name
             </Label>
             <Input id='name' value={name} className='col-span-3' onChange={(e) => setName(e.target.value)} />
-          </div>
-          <div className='grid grid-cols-4 items-center gap-4'>
-            <Label htmlFor='picture' className='text-right'>
-              Picture URL
-            </Label>
-            <Input id='picture' value={picture} className='col-span-3' onChange={(e) => setPicture(e.target.value)} />
           </div>
         </div>
         <DialogFooter>

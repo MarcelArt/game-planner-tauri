@@ -1,10 +1,13 @@
 use sqlx::Pool;
 use uuid::Uuid;
 
-use crate::models::{item::{Item, ItemDto}, page::Page};
+use crate::models::{
+    item::{Item, ItemDto},
+    page::Page,
+};
 
 pub struct ItemRepo {
-    db: Pool<sqlx::Sqlite>
+    db: Pool<sqlx::Sqlite>,
 }
 
 impl ItemRepo {
@@ -37,16 +40,15 @@ impl ItemRepo {
             ",
             limit,
             offset,
-        ).fetch_all(&self.db).await?;
+        )
+        .fetch_all(&self.db)
+        .await?;
 
         let total = sqlx::query_scalar!("select count(*) from items")
             .fetch_one(&self.db)
             .await?;
 
-        let page = Page::<Item> {
-            items,
-            total,
-        };
+        let page = Page::<Item> { items, total };
 
         Ok(page)
     }
@@ -58,37 +60,46 @@ impl ItemRepo {
                 set name = $1, picture = $2, game_id = $3
                 where id = $4
             ",
-            input.name, input.picture, input.game_id, id
-        ).execute(&self.db).await?;
+            input.name,
+            input.picture,
+            input.game_id,
+            id
+        )
+        .execute(&self.db)
+        .await?;
 
         Ok(())
     }
 
     pub async fn get_by_id(&self, id: String) -> Result<Item, sqlx::Error> {
-        let item = sqlx::query_as!(
-            Item,
-            "select * from items where id = $1",
-            id,
-        ).fetch_one(&self.db).await?;
+        let item = sqlx::query_as!(Item, "select * from items where id = $1", id,)
+            .fetch_one(&self.db)
+            .await?;
 
         Ok(item)
     }
 
-    pub async fn get_by_game_id(&self, game_id: String, limit: i32, page: i32) -> Result<Page<Item>, sqlx::Error> {
+    pub async fn get_by_game_id(
+        &self,
+        game_id: String,
+        limit: i32,
+        page: i32,
+    ) -> Result<Page<Item>, sqlx::Error> {
         let items = sqlx::query_as!(
             Item,
             "select * from items where game_id = $1 limit $2 offset $3",
-            game_id, limit, page,
-        ).fetch_all(&self.db).await?;
+            game_id,
+            limit,
+            page,
+        )
+        .fetch_all(&self.db)
+        .await?;
 
         let total = sqlx::query_scalar!("select count(*) from items where game_id = $1", game_id)
             .fetch_one(&self.db)
             .await?;
 
-        let page = Page::<Item> {
-            items,
-            total,
-        };
+        let page = Page::<Item> { items, total };
 
         Ok(page)
     }

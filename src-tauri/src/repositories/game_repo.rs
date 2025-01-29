@@ -1,10 +1,13 @@
 use sqlx::Pool;
 use uuid::Uuid;
 
-use crate::models::{game::{Game, GameDto}, page::Page};
+use crate::models::{
+    game::{Game, GameDto},
+    page::Page,
+};
 
 pub struct GameRepo {
-    db: Pool<sqlx::Sqlite>
+    db: Pool<sqlx::Sqlite>,
 }
 
 impl GameRepo {
@@ -40,12 +43,10 @@ impl GameRepo {
             limit,
             offset,
         )
-            .fetch_all(&self.db)
-            .await?;
+        .fetch_all(&self.db)
+        .await?;
 
-        let total  = sqlx::query_scalar!(
-            "SELECT COUNT(*) as count from games",
-        )
+        let total = sqlx::query_scalar!("SELECT COUNT(*) as count from games",)
             .fetch_one(&self.db)
             .await?;
 
@@ -60,8 +61,8 @@ impl GameRepo {
             "SELECT id, name, description, picture FROM games WHERE id = $1",
             id,
         )
-            .fetch_one(&self.db)
-            .await?;
+        .fetch_one(&self.db)
+        .await?;
 
         Ok(game)
     }
@@ -73,8 +74,13 @@ impl GameRepo {
                 SET name = $1, description = $2, picture = $3
                 WHERE id = $4
             ",
-            input.name, input.description, input.picture, id
-        ).execute(&self.db).await?;
+            input.name,
+            input.description,
+            input.picture,
+            id
+        )
+        .execute(&self.db)
+        .await?;
 
         Ok(())
     }

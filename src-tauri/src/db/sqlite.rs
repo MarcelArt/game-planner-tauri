@@ -6,9 +6,7 @@ pub async fn setup_sqlite() -> Result<Pool<sqlx::Sqlite>, sqlx::Error> {
         .max_connections(1)
         .connect(dotenv!("DATABASE_URL"))
         .await?;
-    sqlx::migrate!("./migrations")
-        .run(&pool)
-        .await?;
+    sqlx::migrate!("./migrations").run(&pool).await?;
 
     println!("Connection to database success");
     Ok(pool)

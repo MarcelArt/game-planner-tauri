@@ -1,3 +1,3 @@
 pub mod game;
-pub mod page;
 pub mod item;
+pub mod page;

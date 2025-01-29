@@ -15,4 +15,3 @@ pub struct ItemDto {
     pub picture: Option<String>,
     pub game_id: String,
 }
-

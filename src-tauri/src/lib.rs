@@ -1,7 +1,7 @@
 mod db;
+mod handlers;
 mod models;
 mod repositories;
-mod handlers;
 
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
 // #[tauri::command]
@@ -14,10 +14,12 @@ pub async fn run() {
     db::sqlite::setup_sqlite().await.unwrap();
 
     tauri::Builder::default()
+        .plugin(tauri_plugin_fs::init())
+        .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_opener::init())
         // .invoke_handler(tauri::generate_handler![greet])
         .invoke_handler(tauri::generate_handler![
-            handlers::game_handler::create_game, 
+            handlers::game_handler::create_game,
             handlers::game_handler::read_game,
             handlers::game_handler::get_game_by_id,
             handlers::game_handler::update_game,

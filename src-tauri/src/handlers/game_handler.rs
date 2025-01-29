@@ -1,4 +1,11 @@
-use crate::{db, models::{game::{Game, GameDto}, page::Page}, repositories};
+use crate::{
+    db,
+    models::{
+        game::{Game, GameDto},
+        page::Page,
+    },
+    repositories,
+};
 
 #[tauri::command]
 pub async fn create_game(input: GameDto) -> Result<Game, String> {
@@ -27,7 +34,7 @@ pub async fn get_game_by_id(id: String) -> Result<Game, String> {
 #[tauri::command]
 pub async fn update_game(id: String, input: GameDto) -> Result<(), String> {
     let db = db::sqlite::connect().await.map_err(|e| e.to_string())?;
-    let game_repo = repositories::game_repo::GameRepo::new(db); 
+    let game_repo = repositories::game_repo::GameRepo::new(db);
 
     game_repo.update(id, input).await.map_err(|e| e.to_string())
 }
