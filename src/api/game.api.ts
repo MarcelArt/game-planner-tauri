@@ -22,8 +22,11 @@ async function update(id: string, input: GameDto): Promise<void> {
 }
 
 async function getById(id: string): Promise<Game> {
-    const game = await invoke('get_game_by_id', { id });
-    return game as Game;
+    const game = await invoke('get_game_by_id', { id }) as Game;
+    const [protocol, ] = game.picture.split('://');
+    const isHttp = ['http', 'https'].includes(protocol);
+    game.picture_b64 = isHttp ? game.picture : await readFileAsBase64(game.picture);
+    return game;
 }
 
 const gameApi = {

@@ -18,7 +18,7 @@ function UpdateGameView() {
     const game = data as Game;
     return (
       <div className='m-20'>
-        <UpdateGame title={game.name} description={game.description} picture={game.picture} gameId={gameId} />
+        <UpdateGame title={game.name} description={game.description} picture={game.picture_b64} gameId={gameId} />
       </div>
     );
   };
