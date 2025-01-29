@@ -24,7 +24,12 @@ async function getByGameId(gameId: string, page: number, limit: number): Promise
     for (let item of items.items) {
         const [protocol, ] = item.picture.split('://');
         const isHttp = ['http', 'https'].includes(protocol);
-        item.picture_b64 = isHttp ? item.picture : await readFileAsBase64(item.picture);
+        try {
+            item.picture_b64 = isHttp ? item.picture : await readFileAsBase64(item.picture);
+        }
+        catch {
+            item.picture_b64 = item.picture
+        }
     }
     console.log('items :>> ', items);
     return items;

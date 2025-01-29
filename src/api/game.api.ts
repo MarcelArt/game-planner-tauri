@@ -11,7 +11,12 @@ async function read(page: number, limit: number): Promise<Page<Game>> {
     for (let game of games.items) {
         const [protocol, ] = game.picture.split('://');
         const isHttp = ['http', 'https'].includes(protocol);
-        game.picture_b64 = isHttp ? game.picture : await readFileAsBase64(game.picture);
+        try {
+            game.picture_b64 = isHttp ? game.picture : await readFileAsBase64(game.picture);
+        }
+        catch {
+            game.picture_b64 = game.picture;
+        }
     }
 
     return games;
@@ -25,7 +30,12 @@ async function getById(id: string): Promise<Game> {
     const game = await invoke('get_game_by_id', { id }) as Game;
     const [protocol, ] = game.picture.split('://');
     const isHttp = ['http', 'https'].includes(protocol);
-    game.picture_b64 = isHttp ? game.picture : await readFileAsBase64(game.picture);
+    try {
+        game.picture_b64 = isHttp ? game.picture : await readFileAsBase64(game.picture);
+    }
+    catch {
+        game.picture_b64 = game.picture;
+    }
     return game;
 }
 
