@@ -1,3 +1,4 @@
+import { readFileAsBase64 } from "@/utils/fs";
 import { invoke } from "@tauri-apps/api/core";
 
 async function create(input: ItemDto): Promise<void> {
@@ -19,9 +20,14 @@ async function getById(id: string): Promise<Item> {
 }
 
 async function getByGameId(gameId: string, page: number, limit: number): Promise<Page<Item>> {
-    const items = await invoke('get_items_by_game_id', { gameId, page, limit });
+    const items = await invoke('get_items_by_game_id', { gameId, page, limit }) as Page<Item>;
+    for (let item of items.items) {
+        const [protocol, ] = item.picture.split('://');
+        const isHttp = ['http', 'https'].includes(protocol);
+        item.picture_b64 = isHttp ? item.picture : await readFileAsBase64(item.picture);
+    }
     console.log('items :>> ', items);
-    return items as Page<Item>;
+    return items;
 }
 
 const itemApi = {
