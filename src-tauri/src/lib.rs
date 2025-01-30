@@ -17,19 +17,24 @@ pub async fn run() {
         .plugin(tauri_plugin_fs::init())
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_opener::init())
-        // .invoke_handler(tauri::generate_handler![greet])
         .invoke_handler(tauri::generate_handler![
+            // game handler commands
             handlers::game_handler::create_game,
             handlers::game_handler::read_game,
             handlers::game_handler::get_game_by_id,
             handlers::game_handler::update_game,
+            // item handler commands
             handlers::item_handler::create_item,
             handlers::item_handler::read_items,
             handlers::item_handler::get_item_by_id,
             handlers::item_handler::update_item,
             handlers::item_handler::get_items_by_game_id,
+            // recipe handler commands
+            handlers::recipe_handler::create_recipe,
+            handlers::recipe_handler::read_recipes,
+            handlers::recipe_handler::get_recipe_by_id,
+            handlers::recipe_handler::update_recipe,
         ])
-        // .invoke_handler(tauri::generate_handler![handlers::game_handler::read_game])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
