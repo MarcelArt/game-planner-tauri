@@ -34,6 +34,11 @@ pub async fn run() {
             handlers::recipe_handler::read_recipes,
             handlers::recipe_handler::get_recipe_by_id,
             handlers::recipe_handler::update_recipe,
+            // recipe detail handler commands
+            handlers::recipe_detail_handler::create_recipe_detail,
+            handlers::recipe_detail_handler::read_recipe_details,
+            handlers::recipe_detail_handler::get_recipe_detail_by_id,
+            handlers::recipe_detail_handler::update_recipe_detail,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

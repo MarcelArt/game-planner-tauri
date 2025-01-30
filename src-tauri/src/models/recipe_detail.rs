@@ -2,14 +2,16 @@ use serde::{Deserialize, Serialize};
 use sqlx::prelude::FromRow;
 
 #[derive(Debug, Deserialize, FromRow, Serialize, Clone)]
-pub struct Recipe {
+pub struct RecipeDetail {
     pub id: String,
-    pub output_amount: f64,
+    pub input_amount: f64,
     pub item_id: String,
+    pub recipe_id: String,
 }
 
 #[derive(Debug, Deserialize, FromRow, Serialize, Clone)]
-pub struct RecipeDto {
-    pub output_amount: f64,
+pub struct RecipeDetailDto {
+    pub input_amount: f64,
     pub item_id: String,
+    pub recipe_id: String,
 }
