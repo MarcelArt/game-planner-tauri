@@ -9,6 +9,7 @@ import itemApi from '@/api/item.api';
 import ItemImagePicker from './item-image-picker';
 import { useToast } from '@/hooks/use-toast';
 import { Separator } from './ui/separator';
+import CreateRecipeDialog from './create-recipe-dialog';
 
 interface UpdateItemSheetProps {
   item: Item;
@@ -60,12 +61,10 @@ export default function UpdateItemSheet({ item }: UpdateItemSheetProps) {
           Save changes
         </Button>
       </div>
-      <Separator className="my-4" />
+      <Separator className='my-4' />
       <h2 className='font-bold'>{item.name} Recipes</h2>
       <div className='w-full flex justify-end'>
-        <Button type='submit' variant='secondary'>
-          Add Recipe
-        </Button>
+        <CreateRecipeDialog item={item} />
       </div>
       <SheetFooter>
         <SheetClose asChild></SheetClose>

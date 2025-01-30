@@ -103,4 +103,12 @@ impl ItemRepo {
 
         Ok(page)
     }
+
+    pub async fn get_all_by_game_id(&self, game_id: String) -> Result<Vec<Item>, sqlx::Error> {
+        sqlx::query_as!(
+            Item,
+            "select * from items where game_id = $1",
+            game_id,
+        ).fetch_all(&self.db).await
+    }
 }

@@ -31,7 +31,23 @@ async function getByGameId(gameId: string, page: number, limit: number): Promise
             item.picture_b64 = item.picture
         }
     }
-    console.log('items :>> ', items);
+
+    return items;
+}
+
+async function getAllByGameId(gameId: string): Promise<Array<Item>> {
+    const items = await invoke('get_all_items_by_game_id', { gameId }) as Array<Item>;
+    for (let item of items) {
+        const [protocol, ] = item.picture.split('://');
+        const isHttp = ['http', 'https'].includes(protocol);
+        try {
+            item.picture_b64 = isHttp ? item.picture : await readFileAsBase64(item.picture);
+        }
+        catch {
+            item.picture_b64 = item.picture
+        }
+    }
+
     return items;
 }
 
@@ -41,6 +57,7 @@ const itemApi = {
     update,
     getById,
     getByGameId,
+    getAllByGameId,
 }
 
 export default itemApi;

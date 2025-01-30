@@ -29,6 +29,7 @@ pub async fn run() {
             handlers::item_handler::get_item_by_id,
             handlers::item_handler::update_item,
             handlers::item_handler::get_items_by_game_id,
+            handlers::item_handler::get_all_items_by_game_id,
             // recipe handler commands
             handlers::recipe_handler::create_recipe,
             handlers::recipe_handler::read_recipes,
