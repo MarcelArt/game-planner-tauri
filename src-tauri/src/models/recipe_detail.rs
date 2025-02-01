@@ -13,5 +13,5 @@ pub struct RecipeDetail {
 pub struct RecipeDetailDto {
     pub input_amount: f64,
     pub item_id: String,
-    pub recipe_id: String,
+    pub recipe_id: Option<String>,
 }

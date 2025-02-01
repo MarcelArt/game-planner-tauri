@@ -1,7 +1,7 @@
 use sqlx::Pool;
 use uuid::Uuid;
 
-use crate::models::{page::Page, recipe::{Recipe, RecipeDto}, recipe_detail::{self, RecipeDetail, RecipeDetailDto}};
+use crate::models::{page::Page, recipe::{Recipe, RecipeDto}, recipe_detail::{RecipeDetail, RecipeDetailDto}};
 
 pub struct RecipeRepo {
     db: Pool<sqlx::Sqlite>,
@@ -83,6 +83,7 @@ impl RecipeRepo {
             ).fetch_one(&mut *tx).await?;
         }
 
+        tx.commit().await?;
         Ok(recipe)
     }
 }

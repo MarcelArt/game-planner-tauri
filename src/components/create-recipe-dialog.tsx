@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { Button } from './ui/button';
 import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from './ui/select';
@@ -9,6 +9,8 @@ import { Input } from './ui/input';
 import { Separator } from './ui/separator';
 import { ScrollArea } from './ui/scroll-area';
 import { FaTrash } from 'react-icons/fa';
+import recipeApi from '@/api/recipe.api';
+import { useToast } from '@/hooks/use-toast';
 
 interface CreateRecipeDialogProps {
   item: Item;
@@ -19,11 +21,25 @@ export default function CreateRecipeDialog(props: CreateRecipeDialogProps) {
 
   const [outputAmount, setOutputAmount] = useState(1);
   const [recipeDetails, setRecipeDetails] = useState([] as Array<RecipeDetailDto>);
-  const [outputItemId, setOutputItemId] = useState('');
+
+  const { toast } = useToast();
 
   const itemsQuery = useQuery({
     queryKey: ['dropdown-items', item.game_id],
     queryFn: () => itemApi.getAllByGameId(item.game_id),
+  });
+
+  const createRecipe = useMutation({
+    mutationFn: () => recipeApi.createWithDetails({ item_id: item.id, output_amount: outputAmount }, recipeDetails),
+    onSuccess: () => {
+      toast({
+        title: 'Recipe saved',
+        description: `Created recipe for ${item.name}`,
+        variant: 'default',
+      });
+      setOutputAmount(1);
+      setRecipeDetails([]);
+    },
   });
 
   if (itemsQuery.isPending) return null;
@@ -42,27 +58,7 @@ export default function CreateRecipeDialog(props: CreateRecipeDialogProps) {
         </DialogHeader>
         <div className='grid gap-4 py-4'>
           <div className='grid grid-cols-4 items-center gap-4'>
-            <Label htmlFor='output_item' className='text-right'>
-              Resulting Item
-            </Label>
-            <Select value={outputItemId} onValueChange={setOutputItemId}>
-              <SelectTrigger className='col-span-3' id='output_item'>
-                <SelectValue placeholder='Select a fruit' />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>Fruits</SelectLabel>
-                  {itemsQuery.data?.map((item) => (
-                    <SelectItem value={item.id}>
-                      <div className='flex flex-row items-center space-x-4'>
-                        <img className='w-8 h-8' src={item.picture_b64} />
-                        <p>{item.name}</p>
-                      </div>
-                    </SelectItem>
-                  ))}
-                </SelectGroup>
-              </SelectContent>
-            </Select>
+            <img className='w-full h-24 col-span-4 object-contain' src={item.picture_b64} />
           </div>
           <div className='grid grid-cols-4 items-center gap-4'>
             <Label htmlFor='output_amount' className='text-right'>
@@ -137,7 +133,7 @@ export default function CreateRecipeDialog(props: CreateRecipeDialogProps) {
         </ScrollArea>
         <DialogFooter>
           <DialogClose asChild>
-            <Button type='submit' onClick={() => handleSaveRecipe({ item_id: outputItemId, output_amount: outputAmount }, recipeDetails)}>
+            <Button type='submit' onClick={() => createRecipe.mutate()}>
               Save changes
             </Button>
           </DialogClose>
@@ -185,8 +181,3 @@ const handleRemoveRecipeDetail = (
   recipeDetails.splice(i, 1);
   setRecipeDetails([...recipeDetails]);
 };
-
-const handleSaveRecipe = (recipe: RecipeDto, recipeDetails: Array<RecipeDetailDto>) => {
-  console.log({ recipe, recipeDetails });
-  
-}
