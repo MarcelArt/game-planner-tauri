@@ -1,7 +1,7 @@
 use sqlx::Pool;
 use uuid::Uuid;
 
-use crate::models::{page::Page, recipe::{Recipe, RecipeDto}};
+use crate::models::{page::Page, recipe::{Recipe, RecipeDto}, recipe_detail::{self, RecipeDetail, RecipeDetailDto}};
 
 pub struct RecipeRepo {
     db: Pool<sqlx::Sqlite>,
@@ -60,5 +60,29 @@ impl RecipeRepo {
             "select * from recipes where id = $1",
             id,
         ).fetch_one(&self.db).await
+    }
+
+    pub async fn create_with_details(&self, input: RecipeDto, details: Vec<RecipeDetailDto>) -> Result<Recipe, sqlx::Error> {
+        let id = Uuid::new_v4().to_string();
+
+        let mut tx = self.db.begin().await?;
+
+        let recipe = sqlx::query_as!(
+            Recipe,
+            "insert into recipes (id, output_amount, item_id) values ($1, $2, $3) returning id, output_amount, item_id",
+            id, input.output_amount, input.item_id,
+        ).fetch_one(&mut *tx).await?;
+
+        for detail in details {
+            let detail_id = Uuid::new_v4().to_string();
+
+            sqlx::query_as!(
+                RecipeDetail,
+                "insert into recipe_details (id, input_amount, item_id, recipe_id) values ($1, $2, $3, $4) returning id, input_amount, item_id, recipe_id",
+                detail_id, detail.input_amount, detail.item_id, recipe.id
+            ).fetch_one(&mut *tx).await?;
+        }
+
+        Ok(recipe)
     }
 }
