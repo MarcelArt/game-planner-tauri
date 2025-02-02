@@ -89,7 +89,7 @@ impl RecipeRepo {
         Ok(recipe)
     }
 
-    pub async fn get_by_item_id_with_details(&self, item_id: String)  -> Result<Vec<RecipeWithDetail>, sqlx::Error> {
+    pub async fn get_by_item_id_with_details(&self, item_id: String) -> Result<Vec<RecipeWithDetail>, sqlx::Error> {
         let recipes = sqlx::query_as!(
             JoinRecipeWithDetail,
             "
@@ -133,5 +133,54 @@ impl RecipeRepo {
         }
 
         Ok(grouped_recipes.into_values().collect())
+    }
+
+    pub async fn update_with_details(&self, recipe: RecipeWithDetail) -> Result<(), sqlx::Error>  {
+        let mut tx = self.db.begin().await?;
+
+        sqlx::query!(
+            "
+                update recipes
+                set output_amount = $1, item_id = $2
+                where id = $3
+            ",
+            recipe.output_amount, recipe.item_id, recipe.id,
+        ).execute(&mut *tx).await?;
+
+        let mut updated_detail_ids: Vec<String> = Vec::new();
+        for detail in recipe.recipe_details {
+            if detail.id.is_empty() {
+                let detail_id = Uuid::new_v4().to_string();
+                sqlx::query!(
+                    "insert into recipe_details (id, input_amount, item_id, recipe_id) values ($1, $2, $3, $4)",
+                    detail_id, detail.input_amount, detail.item_id, recipe.id
+                ).execute(&mut *tx).await?;
+                updated_detail_ids.push(detail_id);
+            } else {
+                sqlx::query!(
+                    "
+                        update recipe_details
+                        set input_amount = $1, item_id = $2, recipe_id = $3
+                        where id = $4
+                    ",
+                    detail.input_amount, detail.item_id, recipe.id, detail.id,
+                ).execute(&mut *tx).await?;
+                updated_detail_ids.push(detail.id);
+            }
+        }
+        
+        if updated_detail_ids.len() > 0 {
+            let cs_updated_detail_ids = updated_detail_ids.join(",");
+            sqlx::query_scalar!(
+                "
+                    delete from recipe_details 
+                    where id not in ($1) and recipe_id = $2
+                ",
+                cs_updated_detail_ids, recipe.id,
+            ).execute(&mut *tx).await?;
+        }
+        
+        tx.commit().await?;
+        Ok(())
     }
 }

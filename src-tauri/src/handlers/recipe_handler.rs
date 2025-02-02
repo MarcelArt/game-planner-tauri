@@ -47,3 +47,11 @@ pub async fn get_recipes_by_item_id_with_details(item_id: String) -> Result<Vec<
 
     repo.get_by_item_id_with_details(item_id).await.map_err(|e| e.to_string())
 }
+
+#[tauri::command]
+pub async fn update_recipe_with_details(recipe: RecipeWithDetail) -> Result<(), String> {
+    let db = db::sqlite::connect().await.map_err(|e| e.to_string())?;
+    let repo = repositories::recipe_repo::RecipeRepo::new(db);
+
+    repo.update_with_details(recipe).await.map_err(|e| e.to_string())
+}
