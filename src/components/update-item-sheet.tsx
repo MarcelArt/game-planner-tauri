@@ -87,7 +87,7 @@ export default function UpdateItemSheet({ item }: UpdateItemSheetProps) {
       ) : (
         <ScrollArea className='h-[60%] mt-2'>
           {recipesQuery.data?.map(recipe => (
-            <RecipeWithDetailsCard recipe={recipe}/>
+            <RecipeWithDetailsCard recipe={recipe} item={item} />
           ))}
         </ScrollArea>
       )}

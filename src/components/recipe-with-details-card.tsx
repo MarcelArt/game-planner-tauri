@@ -1,12 +1,13 @@
-import { FaArrowRight, FaEdit } from 'react-icons/fa';
+import { FaArrowRight } from 'react-icons/fa';
 import { Separator } from './ui/separator';
-import { Button } from './ui/button';
+import { UpdateRecipeDialog } from './update-recipe-dialog';
 
 interface RecipeWithDetailsCardProps {
   recipe: RecipeWithDetail;
+  item: Item;
 }
 
-export default function RecipeWithDetailsCard({ recipe }: RecipeWithDetailsCardProps) {
+export default function RecipeWithDetailsCard({ recipe, item }: RecipeWithDetailsCardProps) {
   return (
     <>
       <Separator className='my-2' />
@@ -33,9 +34,7 @@ export default function RecipeWithDetailsCard({ recipe }: RecipeWithDetailsCardP
           </div>
         </div>
         <div className='flex flex-row-reverse'>
-          <Button variant='secondary' className='border-0 text-foreground hover:border-0 hover:text-muted-foreground mt-2'>
-            <FaEdit />
-          </Button>
+          <UpdateRecipeDialog recipeWithDetail={recipe} item={item} />
         </div>
       </div>
     </>
