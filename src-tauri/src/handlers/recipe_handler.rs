@@ -1,4 +1,4 @@
-use crate::{db, models::{page::Page, recipe::{Recipe, RecipeDto}, recipe_detail::RecipeDetailDto}, repositories};
+use crate::{db, models::{page::Page, recipe::{Recipe, RecipeDto, RecipeWithDetail}, recipe_detail::RecipeDetailDto}, repositories};
 
 #[tauri::command]
 pub async fn create_recipe(input: RecipeDto) -> Result<Recipe, String> {
@@ -38,4 +38,12 @@ pub async fn create_recipe_with_details(recipe: RecipeDto, recipe_details: Vec<R
     let repo = repositories::recipe_repo::RecipeRepo::new(db);
     
     repo.create_with_details(recipe, recipe_details).await.map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+pub async fn get_recipes_by_item_id_with_details(item_id: String) -> Result<Vec<RecipeWithDetail>, String> {
+    let db = db::sqlite::connect().await.map_err(|e| e.to_string())?;
+    let repo = repositories::recipe_repo::RecipeRepo::new(db);
+
+    repo.get_by_item_id_with_details(item_id).await.map_err(|e| e.to_string())
 }

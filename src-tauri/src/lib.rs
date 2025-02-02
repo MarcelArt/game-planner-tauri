@@ -36,6 +36,7 @@ pub async fn run() {
             handlers::recipe_handler::get_recipe_by_id,
             handlers::recipe_handler::update_recipe,
             handlers::recipe_handler::create_recipe_with_details,
+            handlers::recipe_handler::get_recipes_by_item_id_with_details,
             // recipe detail handler commands
             handlers::recipe_detail_handler::create_recipe_detail,
             handlers::recipe_detail_handler::read_recipe_details,
