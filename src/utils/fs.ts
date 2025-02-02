@@ -45,6 +45,6 @@ export async function readFileAsBase64(file: string): Promise<string> {
   }
   catch(e) {
     console.log(`error ${file}`, e);
-    throw e;
+    return file;
   }
 }

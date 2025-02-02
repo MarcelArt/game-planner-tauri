@@ -4,13 +4,16 @@ import { Input } from './ui/input';
 import { Label } from './ui/label';
 import { SheetClose, SheetDescription, SheetFooter, SheetHeader, SheetTitle } from './ui/sheet';
 import { imagePicker } from '@/utils/fs';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import itemApi from '@/api/item.api';
 import ItemImagePicker from './item-image-picker';
 import { useToast } from '@/hooks/use-toast';
 import { Separator } from './ui/separator';
 import CreateRecipeDialog from './create-recipe-dialog';
-import { FaArrowRight } from 'react-icons/fa';
+import recipeApi from '@/api/recipe.api';
+import { Skeleton } from './ui/skeleton';
+import { ScrollArea } from './ui/scroll-area';
+import RecipeWithDetailsCard from './recipe-with-details-card';
 
 interface UpdateItemSheetProps {
   item: Item;
@@ -42,6 +45,11 @@ export default function UpdateItemSheet({ item }: UpdateItemSheetProps) {
     },
   });
 
+  const recipesQuery = useQuery({
+    queryKey: ['recipes-with-details', item.id],
+    queryFn: () => recipeApi.getByItemIdWithDetails(item.id),
+  });
+
   return (
     <>
       <SheetHeader>
@@ -67,70 +75,22 @@ export default function UpdateItemSheet({ item }: UpdateItemSheetProps) {
       <div className='w-full flex justify-end'>
         <CreateRecipeDialog item={item} />
       </div>
-      <Separator className='my-2' />
-      <div className='grid grid-cols-5 mt-2 border-2 p-1 bg-accent rounded-lg border-primary'>
-        <div className='col-span-3 grid grid-cols-3 gap-1'>
-          <div className='flex flex-col justify-between items-center border-2 rounded-md border-foreground'>
-            <img src={base64} alt='Required Item' className='w-8 h-8' />
-            <span>1</span>
-          </div>
-          <div className='flex flex-col justify-between items-center border-2 rounded-md border-foreground'>
-            <img src={base64} alt='Required Item' className='w-8 h-8' />
-            <span>1</span>
-          </div>
-          <div className='flex flex-col justify-between items-center border-2 rounded-md border-foreground'>
-            <img src={base64} alt='Required Item' className='w-8 h-8' />
-            <span>1</span>
-          </div>
-          <div className='flex flex-col justify-between items-center border-2 rounded-md border-foreground'>
-            <img src={base64} alt='Required Item' className='w-8 h-8' />
-            <span>1</span>
-          </div>
-        </div>
-        <div className='col-span-1 flex items-center justify-between text-xl'>
-          <Separator orientation='vertical' className='mx-2' />
-          <FaArrowRight />
-          <Separator orientation='vertical' className='mx-2' />
-        </div>
-        <div className='col-span-1 flex flex-col'>
-          <div className='flex flex-col justify-between items-center border-2 rounded-md border-foreground'>
-            <img src={base64} alt='Required Item' className='w-8 h-8' />
-            <span>2</span>
-          </div>
-        </div>
-      </div>
-      <Separator className='my-2' />
-      <div className='grid grid-cols-5 mt-2 border-2 p-1 bg-accent rounded-lg border-primary'>
-        <div className='col-span-3 grid grid-cols-3 gap-1'>
-          <div className='flex flex-col justify-between items-center border-2 rounded-md border-foreground'>
-            <img src={base64} alt='Required Item' className='w-8 h-8' />
-            <span>1</span>
-          </div>
-          <div className='flex flex-col justify-between items-center border-2 rounded-md border-foreground'>
-            <img src={base64} alt='Required Item' className='w-8 h-8' />
-            <span>1</span>
-          </div>
-          <div className='flex flex-col justify-between items-center border-2 rounded-md border-foreground'>
-            <img src={base64} alt='Required Item' className='w-8 h-8' />
-            <span>1</span>
-          </div>
-          <div className='flex flex-col justify-between items-center border-2 rounded-md border-foreground'>
-            <img src={base64} alt='Required Item' className='w-8 h-8' />
-            <span>1</span>
-          </div>
-        </div>
-        <div className='col-span-1 flex items-center justify-between text-xl'>
-          <Separator orientation='vertical' className='mx-2' />
-          <FaArrowRight />
-          <Separator orientation='vertical' className='mx-2' />
-        </div>
-        <div className='col-span-1 flex flex-col'>
-          <div className='flex flex-col justify-between items-center border-2 rounded-md border-foreground'>
-            <img src={base64} alt='Required Item' className='w-8 h-8' />
-            <span>2</span>
-          </div>
-        </div>
-      </div>
+      {recipesQuery.isPending ? (
+        <>
+          <Separator className='my-2' />
+          <Skeleton className='rounded-lg w-full h-1/6 mt-2' />
+          <Separator className='my-2' />
+          <Skeleton className='rounded-lg w-full h-1/6 mt-2' />
+          <Separator className='my-2' />
+          <Skeleton className='rounded-lg w-full h-1/6 mt-2' />
+        </>
+      ) : (
+        <ScrollArea className='h-[60%] mt-2'>
+          {recipesQuery.data?.map(recipe => (
+            <RecipeWithDetailsCard recipe={recipe}/>
+          ))}
+        </ScrollArea>
+      )}
       <SheetFooter>
         <SheetClose asChild></SheetClose>
       </SheetFooter>

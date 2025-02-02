@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Button } from './ui/button';
 import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from './ui/select';
@@ -24,6 +24,8 @@ export default function CreateRecipeDialog(props: CreateRecipeDialogProps) {
 
   const { toast } = useToast();
 
+  const queryClient = useQueryClient();
+
   const itemsQuery = useQuery({
     queryKey: ['dropdown-items', item.game_id],
     queryFn: () => itemApi.getAllByGameId(item.game_id),
@@ -37,6 +39,9 @@ export default function CreateRecipeDialog(props: CreateRecipeDialogProps) {
         description: `Created recipe for ${item.name}`,
         variant: 'default',
       });
+
+      queryClient.invalidateQueries({ queryKey: ['recipes-with-details', item.id] })
+
       setOutputAmount(1);
       setRecipeDetails([]);
     },
