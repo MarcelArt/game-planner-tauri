@@ -17,11 +17,3 @@ interface RecipeWithDetail {
     item_picture_b64: string,
     recipe_details: Array<RecipeDetailForRecipe>,
 }
-
-// pub struct RecipeWithDetail {
-//     pub id: String,
-//     pub output_amount: f64,
-//     pub item_id: String,
-//     pub item_picture: String,
-//     pub recipe_details: Vec<RecipeDetailForRecipe>
-// }
