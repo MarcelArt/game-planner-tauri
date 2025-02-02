@@ -170,14 +170,23 @@ impl RecipeRepo {
         }
         
         if updated_detail_ids.len() > 0 {
-            let cs_updated_detail_ids = updated_detail_ids.join(",");
-            sqlx::query_scalar!(
+            let for_placeholder_ids = updated_detail_ids.clone();
+            let placeholder: Vec<&str> = for_placeholder_ids.into_iter().map(|_| "?").collect();
+            let query = format!(
                 "
                     delete from recipe_details 
-                    where id not in ($1) and recipe_id = $2
+                    where id not in ({}) and recipe_id = ?
                 ",
-                cs_updated_detail_ids, recipe.id,
-            ).execute(&mut *tx).await?;
+                placeholder.join(","),
+            );
+
+            let mut stmt = sqlx::query(query.as_ref());
+            for updated_detail_id in updated_detail_ids {
+                stmt = stmt.bind(updated_detail_id)
+            }
+            stmt.bind(recipe.id)
+                .execute(&mut *tx)
+                .await?;
         }
         
         tx.commit().await?;

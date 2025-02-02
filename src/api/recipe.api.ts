@@ -25,9 +25,14 @@ async function getByItemIdWithDetails(itemId: string): Promise<Array<RecipeWithD
     return recipes;
 }
 
+async function updateWithDetails(recipe: RecipeWithDetail): Promise<void> {
+    await invoke('update_recipe_with_details', { recipe });
+}
+
 const recipeApi = {
     createWithDetails,
     getByItemIdWithDetails,
+    updateWithDetails,
 }
 
 export default recipeApi;
