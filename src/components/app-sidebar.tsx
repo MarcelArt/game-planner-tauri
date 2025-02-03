@@ -34,6 +34,11 @@ export function AppSidebar(props: SidebarProp) {
       url: `/game/${props.gameId}/item`,
       icon: Inbox,
     },
+    {
+      title: 'Inventory',
+      url: `/game/${props.gameId}/inventory`,
+      icon: Inbox,
+    },
   ];
   return (
     <Sidebar>

@@ -10,6 +10,7 @@ import GamesView from './views/games-view';
 import GameDetailView from './views/game-detail-view';
 import UpdateGameView from './views/update-game-view';
 import ItemsView from './views/items-view';
+import InventoryView from './views/inventory-view';
 
 const queryClient = new QueryClient();
 
@@ -50,6 +51,14 @@ function App() {
                 element={
                   <Layout>
                     <ItemsView />
+                  </Layout>
+                }
+              />
+              <Route
+                path='/game/:gameId/inventory'
+                element={
+                  <Layout>
+                    <InventoryView />
                   </Layout>
                 }
               />
