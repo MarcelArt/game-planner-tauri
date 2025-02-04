@@ -1,6 +1,7 @@
 use sqlx::Pool;
+use uuid::Uuid;
 
-use crate::models::{inventory::InventoryWithItem, page::Page};
+use crate::models::{inventory::{Inventory, InventoryDto, InventoryWithItem}, page::Page};
 
 pub struct InventoryRepo {
     db: Pool<sqlx::Sqlite>,
@@ -50,5 +51,33 @@ impl InventoryRepo {
         };
 
         Ok(page)
+    }
+
+    pub async fn upsert(&self, input: InventoryDto) -> Result<Inventory, sqlx::Error> {
+        let inventory = match input.id {
+            Some(id) => {
+                sqlx::query_as!(
+                    Inventory,
+                    "
+                        UPDATE inventories
+                        SET amount = $1, item_id = $2
+                        WHERE id = $3
+                        RETURNING id, amount, item_id
+                    ",
+                    input.amount, input.item_id, id,
+                ).fetch_one(&self.db).await?
+            },
+            None => {
+                let id = Uuid::new_v4().to_string();
+
+                sqlx::query_as!(
+                    Inventory,
+                    "INSERT INTO inventories (id, amount, item_id) VALUES ($1, $2, $3) RETURNING id, amount, item_id",
+                    id, input.amount, input.item_id,
+                ).fetch_one(&self.db).await?
+            }
+        };
+
+        Ok(inventory)
     }
 }

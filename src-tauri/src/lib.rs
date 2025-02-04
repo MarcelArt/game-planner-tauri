@@ -45,6 +45,7 @@ pub async fn run() {
             handlers::recipe_detail_handler::update_recipe_detail,
             // inventory handler commands
             handlers::inventory_handler::get_inventories_by_game_id,
+            handlers::inventory_handler::upsert_inventory,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
