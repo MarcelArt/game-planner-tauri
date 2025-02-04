@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Input } from './ui/input';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import inventoryApi from '@/api/inventory.api';
 
 interface InventoryBoxProps {
   inventory: InventoryWithItem;
@@ -8,17 +10,36 @@ interface InventoryBoxProps {
 export default function InventoryBox({ inventory }: InventoryBoxProps) {
   const delay = 1000;
   const [amount, setAmount] = useState(inventory.amount ?? 0);
+  const [inventoryId, setInventoryId] = useState(inventory.id);
 
-  const onDebouncedChange = (a: number) => console.log('a :>> ', a);
+  const queryClient = useQueryClient();
+
+  const upsertInventory = useMutation({
+    mutationFn: (input: InventoryDto) => inventoryApi.upsert(input),
+    onSuccess: (data) => {
+      setInventoryId(data.id);
+      queryClient.invalidateQueries({
+        queryKey: ['inventories', inventory.game_id],
+      })
+    },
+  });
+
+  const onDebouncedChange = () => {
+    upsertInventory.mutate({
+      amount,
+      item_id: inventory.item_id,
+      id: inventoryId,
+    });
+  }
 
   useEffect(() => {
 
     const handler = setTimeout(() => {
-      onDebouncedChange(amount);
+      onDebouncedChange();
     }, delay);
 
     return () => clearTimeout(handler);
-  }, [amount, delay, onDebouncedChange]);
+  }, [amount]);
 
   return (
     <div className='col-span-1 flex flex-col justify-between items-center border-2 rounded-md border-foreground'>

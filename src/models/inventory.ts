@@ -11,5 +11,11 @@ interface InventoryWithItem {
 interface InventoryDto {
     id?: string;
     amount: number;
-    item_id: number;
+    item_id: string;
+}
+
+interface Inventory {
+    id: string;
+    amount: number;
+    item_id: string;
 }

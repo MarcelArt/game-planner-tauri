@@ -14,8 +14,13 @@ async function getByGameId(gameId: string, limit: number, page: number): Promise
     return inventories;
 }
 
+async function upsert(input: InventoryDto): Promise<Inventory> {
+    return await invoke('upsert_inventory', { input });
+}
+
 const inventoryApi = {
     getByGameId,
+    upsert,
 }
 
 export default inventoryApi;
