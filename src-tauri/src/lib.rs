@@ -46,6 +46,8 @@ pub async fn run() {
             // inventory handler commands
             handlers::inventory_handler::get_inventories_by_game_id,
             handlers::inventory_handler::upsert_inventory,
+            // plan handler commands
+            handlers::plan_handler::get_plans_by_game_id,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
