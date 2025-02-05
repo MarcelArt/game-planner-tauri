@@ -26,7 +26,18 @@ impl PlanRepo {
             .fetch_all(&self.db)
             .await?;
 
-        let total = sqlx::query_scalar!("SELECT count(*) from v_plan_details vpd where vpd.game_id = $1", game_id)
+        let total = sqlx::query_scalar!(
+            "
+                with cte_plan_count as (
+                    SELECT 
+                        vpd.recipe_id
+                    from v_plan_details vpd 
+                    where vpd.game_id = $1
+                    GROUP by vpd.recipe_id
+                )
+                select count(*) from cte_plan_count
+            "
+            , game_id)
             .fetch_one(&self.db)
             .await?;
 
@@ -59,7 +70,7 @@ impl PlanRepo {
 
         let page = Page::<PlanResponse> {
             items: grouped_plans.into_values().collect(),
-            total: total,
+            total,
         };
 
         Ok(page)

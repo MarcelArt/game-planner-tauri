@@ -15,12 +15,12 @@ pub struct PlanDetailView {
     pub input_item_id: Option<String>,
     pub input_item_name: Option<String>,
     pub input_item_picture: Option<String>,
-    pub required_amount: Option<f64>,
+    pub required_amount: Option<i64>,
     pub output_item_id: Option<String>,
     pub output_item_name: Option<String>,
     pub output_item_picture: Option<String>,
     pub input_amount_owned: Option<i64>,
-    pub input_need_amount: Option<f64>,
+    pub input_need_amount: Option<i64>,
     pub recipe_id: Option<String>,
 }
 
@@ -39,7 +39,7 @@ pub struct PlanRecipeResponse {
     pub input_item_id: Option<String>,
     pub input_item_name: Option<String>,
     pub input_item_picture: Option<String>,
-    pub required_amount: Option<f64>,
+    pub required_amount: Option<i64>,
     pub input_amount_owned: Option<i64>,
-    pub input_need_amount: Option<f64>,
+    pub input_need_amount: Option<i64>,
 }

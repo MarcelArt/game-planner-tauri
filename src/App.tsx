@@ -11,6 +11,7 @@ import GameDetailView from './views/game-detail-view';
 import UpdateGameView from './views/update-game-view';
 import ItemsView from './views/items-view';
 import InventoryView from './views/inventory-view';
+import PlansView from './views/plans-view';
 
 const queryClient = new QueryClient();
 
@@ -59,6 +60,14 @@ function App() {
                 element={
                   <Layout>
                     <InventoryView />
+                  </Layout>
+                }
+              />
+              <Route
+                path='/game/:gameId/plan'
+                element={
+                  <Layout>
+                    <PlansView />
                   </Layout>
                 }
               />
