@@ -1,6 +1,8 @@
 import planApi from '@/api/plan.api';
 import Paginator from '@/components/paginator';
+import PlanBox from '@/components/plan-box';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useParams } from 'react-router';
@@ -24,6 +26,17 @@ export default function PlansView() {
         </CardHeader>
         <CardContent>
           <p>Plans</p>
+          {plansQuery.isPending ? (
+            <>
+              <Skeleton className='w-full h-32 my-2' />
+              <Skeleton className='w-full h-32 my-2' />
+              <Skeleton className='w-full h-32 my-2' />
+              <Skeleton className='w-full h-32 my-2' />
+              <Skeleton className='w-full h-32 my-2' />
+            </>
+          ) : (
+            plansQuery.data?.items.map((plan, i) => <PlanBox key={i} plan={plan} gameId={gameId!} />)
+          )}
         </CardContent>
         <CardFooter>
           <Paginator page={page} limit={20} onClickPage={setPage} total={plansQuery.data?.total!} />

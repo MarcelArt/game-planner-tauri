@@ -16,4 +16,5 @@ interface PlanRecipeResponse {
     required_amount: number;
     input_amount_owned: number;
     input_need_amount: number;
+    input_inventory_id?: string;
 }

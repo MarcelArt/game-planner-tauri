@@ -15,6 +15,7 @@ async function getByGameId(gameId: string, limit: number, page: number): Promise
 }
 
 async function upsert(input: InventoryDto): Promise<Inventory> {
+    console.log('inventoryId :>> ', input.id);
     return await invoke('upsert_inventory', { input });
 }
 

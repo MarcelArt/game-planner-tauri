@@ -62,6 +62,7 @@ impl PlanRepo {
                         input_item_picture: row.input_item_picture,
                         input_need_amount: row.input_need_amount,
                         required_amount: row.required_amount,
+                        input_inventory_id: row.input_inventory_id,
                     });
                 },
                 _ => continue,

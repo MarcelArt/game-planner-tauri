@@ -11,11 +11,12 @@ async function getByGameId(gameId: string, limit: number, page: number): Promise
         plan.output_item_picture_b64 = isHttp ? picture : await readFileAsBase64(picture);
 
         for (let recipe of plan.recipes) {
-            const picture = recipe.input_item_picture_b64 ?? '';
+            const picture = recipe.input_item_picture ?? '';
             const [protocol, ] = picture.split('://');
             const isHttp = ['http', 'https'].includes(protocol);
 
             recipe.input_item_picture_b64 = isHttp ? picture : await readFileAsBase64(picture);
+            console.log({ recipe });
         }
     }
 

@@ -22,6 +22,7 @@ pub struct PlanDetailView {
     pub input_amount_owned: Option<i64>,
     pub input_need_amount: Option<i64>,
     pub recipe_id: Option<String>,
+    pub input_inventory_id: Option<String>,
 }
 
 #[derive(Debug, Deserialize, Serialize, Clone)]
@@ -42,4 +43,5 @@ pub struct PlanRecipeResponse {
     pub required_amount: Option<i64>,
     pub input_amount_owned: Option<i64>,
     pub input_need_amount: Option<i64>,
+    pub input_inventory_id: Option<String>,
 }

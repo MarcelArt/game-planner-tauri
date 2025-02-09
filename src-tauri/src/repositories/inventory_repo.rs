@@ -54,6 +54,7 @@ impl InventoryRepo {
     }
 
     pub async fn upsert(&self, input: InventoryDto) -> Result<Inventory, sqlx::Error> {
+        println!("{:#?}", input);
         let inventory = match input.id {
             Some(id) if !id.is_empty() => {
                 sqlx::query_as!(
