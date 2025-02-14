@@ -3,7 +3,11 @@ use std::collections::HashMap;
 use sqlx::Pool;
 use uuid::Uuid;
 
-use crate::models::{page::Page, recipe::{JoinRecipeWithDetail, Recipe, RecipeDto, RecipeWithDetail}, recipe_detail::{RecipeDetail, RecipeDetailDto, RecipeDetailForRecipe}};
+use crate::models::{
+    page::Page,
+    recipe::{JoinRecipeWithDetail, Recipe, RecipeDto, RecipeWithDetail},
+    recipe_detail::{RecipeDetail, RecipeDetailDto, RecipeDetailForRecipe},
+};
 
 pub struct RecipeRepo {
     db: Pool<sqlx::Sqlite>,
@@ -31,14 +35,20 @@ impl RecipeRepo {
         let recipes = sqlx::query_as!(
             Recipe,
             "select * from recipes limit $1 offset $2",
-            limit, offset,
-        ).fetch_all(&self.db).await?;
+            limit,
+            offset,
+        )
+        .fetch_all(&self.db)
+        .await?;
 
         let total = sqlx::query_scalar!("SELECT COUNT(*) as count from recipes",)
             .fetch_one(&self.db)
             .await?;
 
-        let page = Page::<Recipe> { items: recipes, total };
+        let page = Page::<Recipe> {
+            items: recipes,
+            total,
+        };
 
         Ok(page)
     }
@@ -50,21 +60,27 @@ impl RecipeRepo {
                 set output_amount = $1, item_id = $2
                 where id = $3
             ",
-            input.output_amount, input.item_id, id
-        ).execute(&self.db).await?;
+            input.output_amount,
+            input.item_id,
+            id
+        )
+        .execute(&self.db)
+        .await?;
 
         Ok(())
     }
 
     pub async fn get_by_id(&self, id: String) -> Result<Recipe, sqlx::Error> {
-        sqlx::query_as!(
-            Recipe,
-            "select * from recipes where id = $1",
-            id,
-        ).fetch_one(&self.db).await
+        sqlx::query_as!(Recipe, "select * from recipes where id = $1", id,)
+            .fetch_one(&self.db)
+            .await
     }
 
-    pub async fn create_with_details(&self, input: RecipeDto, details: Vec<RecipeDetailDto>) -> Result<Recipe, sqlx::Error> {
+    pub async fn create_with_details(
+        &self,
+        input: RecipeDto,
+        details: Vec<RecipeDetailDto>,
+    ) -> Result<Recipe, sqlx::Error> {
         let id = Uuid::new_v4().to_string();
 
         let mut tx = self.db.begin().await?;
@@ -89,7 +105,10 @@ impl RecipeRepo {
         Ok(recipe)
     }
 
-    pub async fn get_by_item_id_with_details(&self, item_id: String) -> Result<Vec<RecipeWithDetail>, sqlx::Error> {
+    pub async fn get_by_item_id_with_details(
+        &self,
+        item_id: String,
+    ) -> Result<Vec<RecipeWithDetail>, sqlx::Error> {
         let recipes = sqlx::query_as!(
             JoinRecipeWithDetail,
             "
@@ -110,18 +129,22 @@ impl RecipeRepo {
                 where r.item_id = $1
             ",
             item_id,
-        ).fetch_all(&self.db).await?;
+        )
+        .fetch_all(&self.db)
+        .await?;
 
         let mut grouped_recipes: HashMap<String, RecipeWithDetail> = HashMap::new();
 
         for row in recipes {
-            let entry = grouped_recipes.entry(row.id.clone()).or_insert_with(|| RecipeWithDetail { 
-                id: row.id, 
-                output_amount: row.output_amount, 
-                item_id: row.output_item_id, 
-                item_picture: row.output_item_picture.unwrap_or_default(), 
-                recipe_details: Vec::new(), 
-            });
+            let entry = grouped_recipes
+                .entry(row.id.clone())
+                .or_insert_with(|| RecipeWithDetail {
+                    id: row.id,
+                    output_amount: row.output_amount,
+                    item_id: row.output_item_id,
+                    item_picture: row.output_item_picture.unwrap_or_default(),
+                    recipe_details: Vec::new(),
+                });
 
             entry.recipe_details.push(RecipeDetailForRecipe {
                 id: row.recipe_detail_id.unwrap_or_default(),
@@ -135,7 +158,7 @@ impl RecipeRepo {
         Ok(grouped_recipes.into_values().collect())
     }
 
-    pub async fn update_with_details(&self, recipe: RecipeWithDetail) -> Result<(), sqlx::Error>  {
+    pub async fn update_with_details(&self, recipe: RecipeWithDetail) -> Result<(), sqlx::Error> {
         let mut tx = self.db.begin().await?;
 
         sqlx::query!(
@@ -144,8 +167,12 @@ impl RecipeRepo {
                 set output_amount = $1, item_id = $2
                 where id = $3
             ",
-            recipe.output_amount, recipe.item_id, recipe.id,
-        ).execute(&mut *tx).await?;
+            recipe.output_amount,
+            recipe.item_id,
+            recipe.id,
+        )
+        .execute(&mut *tx)
+        .await?;
 
         let mut updated_detail_ids: Vec<String> = Vec::new();
         for detail in recipe.recipe_details {
@@ -163,12 +190,17 @@ impl RecipeRepo {
                         set input_amount = $1, item_id = $2, recipe_id = $3
                         where id = $4
                     ",
-                    detail.input_amount, detail.item_id, recipe.id, detail.id,
-                ).execute(&mut *tx).await?;
+                    detail.input_amount,
+                    detail.item_id,
+                    recipe.id,
+                    detail.id,
+                )
+                .execute(&mut *tx)
+                .await?;
                 updated_detail_ids.push(detail.id);
             }
         }
-        
+
         if updated_detail_ids.len() > 0 {
             let for_placeholder_ids = updated_detail_ids.clone();
             let placeholder: Vec<&str> = for_placeholder_ids.into_iter().map(|_| "?").collect();
@@ -184,11 +216,9 @@ impl RecipeRepo {
             for updated_detail_id in updated_detail_ids {
                 stmt = stmt.bind(updated_detail_id)
             }
-            stmt.bind(recipe.id)
-                .execute(&mut *tx)
-                .await?;
+            stmt.bind(recipe.id).execute(&mut *tx).await?;
         }
-        
+
         tx.commit().await?;
         Ok(())
     }

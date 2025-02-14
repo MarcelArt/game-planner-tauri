@@ -1,7 +1,10 @@
 use sqlx::Pool;
 use uuid::Uuid;
 
-use crate::models::{page::Page, recipe_detail::{RecipeDetail, RecipeDetailDto}};
+use crate::models::{
+    page::Page,
+    recipe_detail::{RecipeDetail, RecipeDetailDto},
+};
 
 pub struct RecipeDetailRepo {
     db: Pool<sqlx::Sqlite>,
@@ -27,14 +30,20 @@ impl RecipeDetailRepo {
         let recipe_details = sqlx::query_as!(
             RecipeDetail,
             "select * from recipe_details limit $1 offset $2",
-            limit, offset,
-        ).fetch_all(&self.db).await?;
+            limit,
+            offset,
+        )
+        .fetch_all(&self.db)
+        .await?;
 
         let total = sqlx::query_scalar!("SELECT COUNT(*) as count from recipe_details",)
             .fetch_one(&self.db)
             .await?;
 
-        let page = Page::<RecipeDetail> { items: recipe_details, total };
+        let page = Page::<RecipeDetail> {
+            items: recipe_details,
+            total,
+        };
 
         Ok(page)
     }
@@ -46,8 +55,13 @@ impl RecipeDetailRepo {
                 set input_amount = $1, item_id = $2, recipe_id = $3
                 where id = $4
             ",
-            input.input_amount, input.item_id, input.recipe_id, id,
-        ).execute(&self.db).await?;
+            input.input_amount,
+            input.item_id,
+            input.recipe_id,
+            id,
+        )
+        .execute(&self.db)
+        .await?;
 
         Ok(())
     }
@@ -57,6 +71,8 @@ impl RecipeDetailRepo {
             RecipeDetail,
             "select * from recipe_details where id = $1",
             id,
-        ).fetch_one(&self.db).await
+        )
+        .fetch_one(&self.db)
+        .await
     }
 }

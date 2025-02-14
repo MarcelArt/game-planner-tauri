@@ -1,4 +1,12 @@
-use crate::{db, models::{page::Page, recipe::{Recipe, RecipeDto, RecipeWithDetail}, recipe_detail::RecipeDetailDto}, repositories};
+use crate::{
+    db,
+    models::{
+        page::Page,
+        recipe::{Recipe, RecipeDto, RecipeWithDetail},
+        recipe_detail::RecipeDetailDto,
+    },
+    repositories,
+};
 
 #[tauri::command]
 pub async fn create_recipe(input: RecipeDto) -> Result<Recipe, String> {
@@ -33,19 +41,28 @@ pub async fn get_recipe_by_id(id: String) -> Result<Recipe, String> {
 }
 
 #[tauri::command]
-pub async fn create_recipe_with_details(recipe: RecipeDto, recipe_details: Vec<RecipeDetailDto>) -> Result<Recipe, String> {
+pub async fn create_recipe_with_details(
+    recipe: RecipeDto,
+    recipe_details: Vec<RecipeDetailDto>,
+) -> Result<Recipe, String> {
     let db = db::sqlite::connect().await.map_err(|e| e.to_string())?;
     let repo = repositories::recipe_repo::RecipeRepo::new(db);
-    
-    repo.create_with_details(recipe, recipe_details).await.map_err(|e| e.to_string())
+
+    repo.create_with_details(recipe, recipe_details)
+        .await
+        .map_err(|e| e.to_string())
 }
 
 #[tauri::command]
-pub async fn get_recipes_by_item_id_with_details(item_id: String) -> Result<Vec<RecipeWithDetail>, String> {
+pub async fn get_recipes_by_item_id_with_details(
+    item_id: String,
+) -> Result<Vec<RecipeWithDetail>, String> {
     let db = db::sqlite::connect().await.map_err(|e| e.to_string())?;
     let repo = repositories::recipe_repo::RecipeRepo::new(db);
 
-    repo.get_by_item_id_with_details(item_id).await.map_err(|e| e.to_string())
+    repo.get_by_item_id_with_details(item_id)
+        .await
+        .map_err(|e| e.to_string())
 }
 
 #[tauri::command]
@@ -53,5 +70,7 @@ pub async fn update_recipe_with_details(recipe: RecipeWithDetail) -> Result<(), 
     let db = db::sqlite::connect().await.map_err(|e| e.to_string())?;
     let repo = repositories::recipe_repo::RecipeRepo::new(db);
 
-    repo.update_with_details(recipe).await.map_err(|e| e.to_string())
+    repo.update_with_details(recipe)
+        .await
+        .map_err(|e| e.to_string())
 }

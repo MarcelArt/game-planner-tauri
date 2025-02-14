@@ -1,7 +1,10 @@
 use sqlx::Pool;
 use uuid::Uuid;
 
-use crate::models::{inventory::{Inventory, InventoryDto, InventoryWithItem}, page::Page};
+use crate::models::{
+    inventory::{Inventory, InventoryDto, InventoryWithItem},
+    page::Page,
+};
 
 pub struct InventoryRepo {
     db: Pool<sqlx::Sqlite>,
@@ -12,7 +15,12 @@ impl InventoryRepo {
         Self { db }
     }
 
-    pub async fn get_by_game_id(&self, game_id: String, limit: i32, page: i32) -> Result<Page<InventoryWithItem>, sqlx::Error> {
+    pub async fn get_by_game_id(
+        &self,
+        game_id: String,
+        limit: i32,
+        page: i32,
+    ) -> Result<Page<InventoryWithItem>, sqlx::Error> {
         let offset = limit * page;
         let inventories = sqlx::query_as!(
             InventoryWithItem,
@@ -29,8 +37,12 @@ impl InventoryRepo {
                 WHERE i.game_id = $1
                 limit $2 offset $3
             ",
-            game_id, limit, offset,
-        ).fetch_all(&self.db).await?;
+            game_id,
+            limit,
+            offset,
+        )
+        .fetch_all(&self.db)
+        .await?;
 
         let total = sqlx::query_scalar!(
             "
@@ -42,8 +54,8 @@ impl InventoryRepo {
             ",
             game_id,
         )
-            .fetch_one(&self.db)
-            .await?;
+        .fetch_one(&self.db)
+        .await?;
 
         let page = Page::<InventoryWithItem> {
             items: inventories,
@@ -65,9 +77,13 @@ impl InventoryRepo {
                         WHERE id = $3
                         RETURNING id, amount, item_id
                     ",
-                    input.amount, input.item_id, id,
-                ).fetch_one(&self.db).await?
-            },
+                    input.amount,
+                    input.item_id,
+                    id,
+                )
+                .fetch_one(&self.db)
+                .await?
+            }
             _ => {
                 let id = Uuid::new_v4().to_string();
 

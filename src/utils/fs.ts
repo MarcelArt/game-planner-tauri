@@ -1,5 +1,6 @@
 import { open } from '@tauri-apps/plugin-dialog';
 import { BaseDirectory, copyFile, readFile } from '@tauri-apps/plugin-fs';
+import { platform } from "@tauri-apps/plugin-os";
 
 
 interface ImagePickerParam {
@@ -19,7 +20,7 @@ export async function imagePicker({ setPicture, setBase64 }: ImagePickerParam) {
   });
 
   if (file) {
-    const fileNamePart = file.split('\\');
+    const fileNamePart = platform() === 'windows' ? file.split('\\') : file.split('/');
     const fileName = `GP/${fileNamePart[fileNamePart.length - 1]}`;
     const binary = await readFile(file);
     const base64String = `data:image/${file.split('.').pop()};base64,${btoa(

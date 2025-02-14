@@ -29,6 +29,7 @@ dotenv_codegen = "0.15.0"
 tauri-plugin-dialog = "2"
 tauri-plugin-fs = "2"
 itertools = "0.14.0"
+tauri-plugin-os = "2"
 
 [dependencies.uuid]
 version = "1.11.1"

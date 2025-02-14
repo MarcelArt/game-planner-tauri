@@ -12,11 +12,20 @@
     "fs:default",
     {
       "identifier": "fs:allow-app-write",
-      "allow": [{ "path": "$PICTURE/GP/*" }]
+      "allow": [
+        {
+          "path": "$PICTURE/GP/*"
+        }
+      ]
     },
     {
       "identifier": "fs:allow-read-file",
-      "allow": [{ "path": "$PICTURE/GP/*" }]
-    }
+      "allow": [
+        {
+          "path": "$PICTURE/GP/*"
+        }
+      ]
+    },
+    "os:default"
   ]
 }

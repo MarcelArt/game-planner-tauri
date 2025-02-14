@@ -1,4 +1,11 @@
-use crate::{db, models::{page::Page, recipe_detail::{RecipeDetail, RecipeDetailDto}}, repositories};
+use crate::{
+    db,
+    models::{
+        page::Page,
+        recipe_detail::{RecipeDetail, RecipeDetailDto},
+    },
+    repositories,
+};
 
 #[tauri::command]
 pub async fn create_recipe_detail(input: RecipeDetailDto) -> Result<RecipeDetail, String> {

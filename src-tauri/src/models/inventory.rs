@@ -15,9 +15,8 @@ pub struct InventoryWithItem {
     pub item_picture: Option<String>,
     pub item_id: String,
     pub amount: Option<i64>,
-    pub game_id: String
+    pub game_id: String,
 }
-
 
 #[derive(Debug, Deserialize, FromRow, Serialize, Clone)]
 pub struct InventoryDto {

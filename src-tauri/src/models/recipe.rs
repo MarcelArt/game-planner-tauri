@@ -22,7 +22,7 @@ pub struct RecipeWithDetail {
     pub output_amount: i64,
     pub item_id: String,
     pub item_picture: String,
-    pub recipe_details: Vec<RecipeDetailForRecipe>
+    pub recipe_details: Vec<RecipeDetailForRecipe>,
 }
 
 #[derive(Debug, Deserialize, FromRow, Serialize, Clone)]
