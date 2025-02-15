@@ -27,6 +27,7 @@ impl PlanRepo {
             "
             SELECT * from v_plan_details vpd 
             where vpd.game_id = $1
+            order by vpd.created_at asc
             limit $2 offset $3
         ",
         )
