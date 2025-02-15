@@ -9,6 +9,12 @@ pub struct Plan {
 }
 
 #[derive(Debug, Deserialize, FromRow, Serialize, Clone)]
+pub struct PlanDto {
+    pub goal: i64,
+    pub item_id: String,
+}
+
+#[derive(Debug, Deserialize, FromRow, Serialize, Clone)]
 pub struct PlanDetailView {
     pub id: String,
     pub goal: i64,

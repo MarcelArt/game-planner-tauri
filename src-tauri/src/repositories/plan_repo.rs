@@ -1,10 +1,11 @@
 use std::collections::HashMap;
 
 use sqlx::Pool;
+use uuid::Uuid;
 
 use crate::models::{
     page::Page,
-    plan::{PlanDetailView, PlanRecipeResponse, PlanResponse},
+    plan::{Plan, PlanDetailView, PlanDto, PlanRecipeResponse, PlanResponse},
 };
 
 pub struct PlanRepo {
@@ -90,5 +91,15 @@ impl PlanRepo {
         };
 
         Ok(page)
+    }
+
+    pub async fn create(&self, input: PlanDto) -> Result<Plan, sqlx::Error> {
+        let id = Uuid::new_v4().to_string();
+
+        sqlx::query_as!(
+            Plan,
+            "INSERT INTO plans (id, goal, item_id, created_at, updated_at) VALUES ($1, $2, $3, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP) RETURNING id, goal, item_id",
+            id, input.goal, input.item_id,
+        ).fetch_one(&self.db).await
     }
 }
