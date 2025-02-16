@@ -29,7 +29,7 @@ jobs:
 
       - name: Create .env file
         run: |
-          echo DATABASE_URL=${{ vars.DATABASE_URL }} >> .env
+          echo DATABASE_URL=${{ vars.DATABASE_URL }} >> src-tauri/.env
 
       - name: install dependencies (ubuntu only)
         if: matrix.platform == 'ubuntu-22.04' # This must match the platform value defined above.
