@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Input } from './ui/input';
 import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useIsFetching, useMutation, useQueryClient } from '@tanstack/react-query';
 import inventoryApi from '@/api/inventory.api';
 
 interface RequiredItemBoxProps {
@@ -15,6 +15,7 @@ export default function RequiredItemBox({ recipe, gameId }: RequiredItemBoxProps
   const [isFirstRender, setIsFirstRender] = useState(true);
 
   const queryClient = useQueryClient();
+  const currentFetch = useIsFetching({ queryKey: ['plans', gameId] }, queryClient);
 
   const isDone = recipe.input_need_amount <= 0;
 
@@ -50,6 +51,8 @@ export default function RequiredItemBox({ recipe, gameId }: RequiredItemBoxProps
 
     return () => clearTimeout(handler);
   }, [amount]);
+
+  useEffect(() => setAmount(recipe.input_amount_owned), [currentFetch]);
 
   return (
     <div className='col-span-1 flex flex-col justify-between items-center border-2 rounded-md border-foreground relative'>
