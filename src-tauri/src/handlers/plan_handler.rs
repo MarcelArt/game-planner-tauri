@@ -1,6 +1,9 @@
 use crate::{
     db,
-    models::{page::Page, plan::{Plan, PlanDto, PlanResponse}},
+    models::{
+        page::Page,
+        plan::{Plan, PlanDto, PlanResponse},
+    },
     repositories,
 };
 
@@ -23,7 +26,5 @@ pub async fn create_plan(input: PlanDto) -> Result<Plan, String> {
     let db = db::sqlite::connect().await.map_err(|e| e.to_string())?;
     let repo = repositories::plan_repo::PlanRepo::new(db);
 
-    repo.create(input)
-        .await
-        .map_err(|e| e.to_string())
+    repo.create(input).await.map_err(|e| e.to_string())
 }
