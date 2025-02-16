@@ -68,6 +68,7 @@ impl PlanRepo {
                                 output_item_id: row.output_item_id,
                                 output_item_name: row.output_item_name,
                                 output_item_picture: row.output_item_picture,
+                                created_at: row.created_at,
                                 recipes: Vec::new(),
                             });
 
@@ -85,12 +86,12 @@ impl PlanRepo {
             }
         }
 
-        let page = Page::<PlanResponse> {
+        let mut page = Page::<PlanResponse> {
             items: grouped_plans.into_values().collect(),
             total,
         };
 
-        println!("{:#?}", page.items);
+        page.items.sort_by_key(|i| i.created_at);
 
         Ok(page)
     }

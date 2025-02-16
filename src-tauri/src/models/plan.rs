@@ -1,3 +1,4 @@
+use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use sqlx::prelude::FromRow;
 
@@ -29,6 +30,7 @@ pub struct PlanDetailView {
     pub input_need_amount: Option<i64>,
     pub recipe_id: Option<String>,
     pub input_inventory_id: Option<String>,
+    pub created_at: DateTime<Utc>,
 }
 
 #[derive(Debug, Deserialize, Serialize, Clone)]
@@ -39,6 +41,7 @@ pub struct PlanResponse {
     pub output_item_name: Option<String>,
     pub output_item_picture: Option<String>,
     pub recipes: Vec<PlanRecipeResponse>,
+    pub created_at: DateTime<Utc>,
 }
 
 #[derive(Debug, Deserialize, Serialize, Clone)]

@@ -5,6 +5,7 @@ interface PlanResponse {
     output_item_name?: string;
     output_item_picture?: string;
     output_item_picture_b64?: string;
+    created_at: Date,
     recipes: Array<PlanRecipeResponse>;
 }
 
