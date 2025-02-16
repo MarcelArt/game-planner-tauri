@@ -52,3 +52,13 @@ pub async fn get_items_by_game_id(
         .await
         .map_err(|e| e.to_string())
 }
+
+#[tauri::command]
+pub async fn get_all_items_by_game_id(game_id: String) -> Result<Vec<Item>, String> {
+    let db = db::sqlite::connect().await.map_err(|e| e.to_string())?;
+    let repo = repositories::item_repo::ItemRepo::new(db);
+
+    repo.get_all_by_game_id(game_id)
+        .await
+        .map_err(|e| e.to_string())
+}

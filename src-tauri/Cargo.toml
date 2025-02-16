@@ -23,11 +23,14 @@ tauri-plugin-opener = "2"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 async-std = { version = "1.6.0", features = ["attributes"] }
-sqlx = { version = "0.8", features = [ "runtime-async-std", "sqlite" ] }
+sqlx = { version = "0.8", features = [ "runtime-async-std", "sqlite", "chrono" ] }
 dotenv = "0.15.0"
 dotenv_codegen = "0.15.0"
 tauri-plugin-dialog = "2"
 tauri-plugin-fs = "2"
+itertools = "0.14.0"
+tauri-plugin-os = "2"
+chrono = { version = "0.4.39", features = ["serde"] }
 
 [dependencies.uuid]
 version = "1.11.1"

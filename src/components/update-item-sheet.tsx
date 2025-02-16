@@ -4,11 +4,16 @@ import { Input } from './ui/input';
 import { Label } from './ui/label';
 import { SheetClose, SheetDescription, SheetFooter, SheetHeader, SheetTitle } from './ui/sheet';
 import { imagePicker } from '@/utils/fs';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import itemApi from '@/api/item.api';
 import ItemImagePicker from './item-image-picker';
 import { useToast } from '@/hooks/use-toast';
 import { Separator } from './ui/separator';
+import CreateRecipeDialog from './create-recipe-dialog';
+import recipeApi from '@/api/recipe.api';
+import { Skeleton } from './ui/skeleton';
+import { ScrollArea } from './ui/scroll-area';
+import RecipeWithDetailsCard from './recipe-with-details-card';
 
 interface UpdateItemSheetProps {
   item: Item;
@@ -40,6 +45,11 @@ export default function UpdateItemSheet({ item }: UpdateItemSheetProps) {
     },
   });
 
+  const recipesQuery = useQuery({
+    queryKey: ['recipes-with-details', item.id],
+    queryFn: () => recipeApi.getByItemIdWithDetails(item.id),
+  });
+
   return (
     <>
       <SheetHeader>
@@ -60,13 +70,27 @@ export default function UpdateItemSheet({ item }: UpdateItemSheetProps) {
           Save changes
         </Button>
       </div>
-      <Separator className="my-4" />
+      <Separator className='my-4' />
       <h2 className='font-bold'>{item.name} Recipes</h2>
       <div className='w-full flex justify-end'>
-        <Button type='submit' variant='secondary'>
-          Add Recipe
-        </Button>
+        <CreateRecipeDialog item={item} />
       </div>
+      {recipesQuery.isPending ? (
+        <>
+          <Separator className='my-2' />
+          <Skeleton className='rounded-lg w-full h-1/6 mt-2' />
+          <Separator className='my-2' />
+          <Skeleton className='rounded-lg w-full h-1/6 mt-2' />
+          <Separator className='my-2' />
+          <Skeleton className='rounded-lg w-full h-1/6 mt-2' />
+        </>
+      ) : (
+        <ScrollArea className='h-[60%] mt-2'>
+          {recipesQuery.data?.map((recipe, i) => (
+            <RecipeWithDetailsCard key={i} recipe={recipe} item={item} />
+          ))}
+        </ScrollArea>
+      )}
       <SheetFooter>
         <SheetClose asChild></SheetClose>
       </SheetFooter>
