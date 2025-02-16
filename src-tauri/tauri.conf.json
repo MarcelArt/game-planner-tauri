@@ -25,6 +25,15 @@
   "bundle": {
     "active": true,
     "targets": "all",
-    "icon": ["icons/32x32.png", "icons/128x128.png", "icons/128x128@2x.png", "icons/icon.icns", "icons/icon.ico"]
+    "icon": ["icons/32x32.png", "icons/128x128.png", "icons/128x128@2x.png", "icons/icon.icns", "icons/icon.ico"],
+    "createUpdaterArtifacts": true
+  },
+  "plugins": {
+    "updater": {
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEMwREMzMzAyQTdENkE2QTIKUldTaXB0YW5BalBjd1AyQlpSMlVYa0hmb2FpNnVUdUNod09HazBzeVBXUEw2OEkzUHNPM0oxdkIK",
+      "endpoints": [
+        "https://github.com/MarcelArt/game-planner-tauri/releases/latest/download/latest.json"
+      ]
+    }
   }
 }
