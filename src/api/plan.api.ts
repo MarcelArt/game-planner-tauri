@@ -23,8 +23,13 @@ async function getByGameId(gameId: string, limit: number, page: number): Promise
     return plans;
 }
 
+async function create(input: PlanDto): Promise<Plan> {
+    return await invoke('create_plan', { input });
+}
+
 const planApi = {
     getByGameId,
+    create,
 }
 
 export default planApi;

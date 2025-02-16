@@ -18,3 +18,14 @@ interface PlanRecipeResponse {
     input_need_amount: number;
     input_inventory_id?: string;
 }
+
+interface Plan {
+    id: string;
+    item_id: string;
+    goal: number;
+}
+
+interface PlanDto {
+    item_id: string;
+    goal: number;
+}

@@ -90,6 +90,8 @@ impl PlanRepo {
             total,
         };
 
+        println!("{:#?}", page.items);
+
         Ok(page)
     }
 
