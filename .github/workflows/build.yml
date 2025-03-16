@@ -70,3 +70,6 @@ jobs:
           releaseDraft: true
           prerelease: false
           args: ${{ matrix.args }}
+      
+      - name: Temp - echo key pass - remove later
+        run: echo ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
