@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "\n                UPDATE games\n                SET name = $1, description = $2, picture = $3\n                WHERE id = $4\n            ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 4
+    },
+    "nullable": []
+  },
+  "hash": "9ae6f5ef72e2508a38cd81f06add131be04c0ed4f24527b0e9f4edd6705f3d54"
+}

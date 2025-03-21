@@ -1,0 +1,68 @@
+{
+  "db_name": "SQLite",
+  "query": "\n                select \n                    r.id id,\n                    r.output_amount output_amount,\n                    r.item_id output_item_id,\n                    i.picture output_item_picture,\n                    rd.id recipe_detail_id,\n                    rd.input_amount input_amount,\n                    rd.item_id input_item_id,\n                    rd.recipe_id recipe_id,\n                    i2.picture input_item_picture\n                from recipes r\n                left join items i ON r.item_id = i.id\n                left join recipe_details rd ON r.id = rd.recipe_id \n                left join items i2 on rd.item_id = i2.id \n                where r.item_id = $1\n            ",
+  "describe": {
+    "columns": [
+      {
+        "name": "id",
+        "ordinal": 0,
+        "type_info": "Text"
+      },
+      {
+        "name": "output_amount",
+        "ordinal": 1,
+        "type_info": "Integer"
+      },
+      {
+        "name": "output_item_id",
+        "ordinal": 2,
+        "type_info": "Text"
+      },
+      {
+        "name": "output_item_picture",
+        "ordinal": 3,
+        "type_info": "Text"
+      },
+      {
+        "name": "recipe_detail_id",
+        "ordinal": 4,
+        "type_info": "Text"
+      },
+      {
+        "name": "input_amount",
+        "ordinal": 5,
+        "type_info": "Integer"
+      },
+      {
+        "name": "input_item_id",
+        "ordinal": 6,
+        "type_info": "Text"
+      },
+      {
+        "name": "recipe_id",
+        "ordinal": 7,
+        "type_info": "Text"
+      },
+      {
+        "name": "input_item_picture",
+        "ordinal": 8,
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ]
+  },
+  "hash": "eda3ada32d3caa19ec5202afe72bfd8a07a3d23a9f39dae2aafb94f41ffff66e"
+}

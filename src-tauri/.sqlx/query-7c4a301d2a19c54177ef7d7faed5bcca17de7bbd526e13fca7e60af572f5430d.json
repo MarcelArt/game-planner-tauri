@@ -1,0 +1,20 @@
+{
+  "db_name": "SQLite",
+  "query": "\n                with cte_plan_count as (\n                    SELECT \n                        vpd.recipe_id\n                    from v_plan_details vpd \n                    where vpd.game_id = $1\n                    GROUP by vpd.recipe_id\n                )\n                select count(*) from cte_plan_count\n            ",
+  "describe": {
+    "columns": [
+      {
+        "name": "count(*)",
+        "ordinal": 0,
+        "type_info": "Integer"
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "7c4a301d2a19c54177ef7d7faed5bcca17de7bbd526e13fca7e60af572f5430d"
+}

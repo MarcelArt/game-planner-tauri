@@ -1,0 +1,38 @@
+{
+  "db_name": "SQLite",
+  "query": "INSERT INTO items (id, name, picture, game_id) VALUES ($1, $2, $3, $4) RETURNING id, name, picture, game_id",
+  "describe": {
+    "columns": [
+      {
+        "name": "id",
+        "ordinal": 0,
+        "type_info": "Text"
+      },
+      {
+        "name": "name",
+        "ordinal": 1,
+        "type_info": "Text"
+      },
+      {
+        "name": "picture",
+        "ordinal": 2,
+        "type_info": "Text"
+      },
+      {
+        "name": "game_id",
+        "ordinal": 3,
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Right": 4
+    },
+    "nullable": [
+      false,
+      false,
+      true,
+      false
+    ]
+  },
+  "hash": "190cf245b729fa53d197c08e0c09f673e13aa6cce5e9f685fa218801563c962d"
+}

@@ -1,0 +1,32 @@
+{
+  "db_name": "SQLite",
+  "query": "insert into recipes (id, output_amount, item_id) values ($1, $2, $3) returning id, output_amount, item_id",
+  "describe": {
+    "columns": [
+      {
+        "name": "id",
+        "ordinal": 0,
+        "type_info": "Text"
+      },
+      {
+        "name": "output_amount",
+        "ordinal": 1,
+        "type_info": "Integer"
+      },
+      {
+        "name": "item_id",
+        "ordinal": 2,
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Right": 3
+    },
+    "nullable": [
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "1e9093098ac73699a73ee13731b9ca5c6383349d3a05cab3acde1bc74e5be14d"
+}

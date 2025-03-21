@@ -1,0 +1,38 @@
+{
+  "db_name": "SQLite",
+  "query": "select * from recipe_details where id = $1",
+  "describe": {
+    "columns": [
+      {
+        "name": "id",
+        "ordinal": 0,
+        "type_info": "Text"
+      },
+      {
+        "name": "item_id",
+        "ordinal": 1,
+        "type_info": "Text"
+      },
+      {
+        "name": "recipe_id",
+        "ordinal": 2,
+        "type_info": "Text"
+      },
+      {
+        "name": "input_amount",
+        "ordinal": 3,
+        "type_info": "Integer"
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "cb9cf2ffdd2b1e643ca6251a85c53100d006ee3979e071620e549b27e91f42f7"
+}

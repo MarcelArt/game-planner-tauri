@@ -1,0 +1,20 @@
+{
+  "db_name": "SQLite",
+  "query": "\n                select \n                    COUNT(*) as count\n                from items i \n                left join inventories i2 on i.id = i2.item_id\n                WHERE i.game_id = $1\n            ",
+  "describe": {
+    "columns": [
+      {
+        "name": "count",
+        "ordinal": 0,
+        "type_info": "Integer"
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "652ff1746f9a70b06a6a1a05ef371ed5bc9a855d95695fc6662a34a8c27a59a7"
+}

@@ -1,0 +1,32 @@
+{
+  "db_name": "SQLite",
+  "query": "\n                        UPDATE inventories\n                        SET amount = $1, item_id = $2\n                        WHERE id = $3\n                        RETURNING id, amount, item_id\n                    ",
+  "describe": {
+    "columns": [
+      {
+        "name": "id",
+        "ordinal": 0,
+        "type_info": "Text"
+      },
+      {
+        "name": "amount",
+        "ordinal": 1,
+        "type_info": "Integer"
+      },
+      {
+        "name": "item_id",
+        "ordinal": 2,
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Right": 3
+    },
+    "nullable": [
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "cdd920e5bf92b94f26ce168000bba45035fee0e75d11e7457767bd92c4b82187"
+}

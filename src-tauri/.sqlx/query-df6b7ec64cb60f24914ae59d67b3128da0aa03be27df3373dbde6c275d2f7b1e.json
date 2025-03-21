@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "insert into recipe_details (id, input_amount, item_id, recipe_id) values ($1, $2, $3, $4)",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 4
+    },
+    "nullable": []
+  },
+  "hash": "df6b7ec64cb60f24914ae59d67b3128da0aa03be27df3373dbde6c275d2f7b1e"
+}

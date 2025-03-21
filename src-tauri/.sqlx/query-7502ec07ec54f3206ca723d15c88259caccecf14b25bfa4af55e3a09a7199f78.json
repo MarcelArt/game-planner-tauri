@@ -1,0 +1,50 @@
+{
+  "db_name": "SQLite",
+  "query": "\n                select \n\t                COALESCE(i2.id, '') id,\n                    i.name item_name,\n                    i.picture item_picture,\n                    i.id item_id,\n                    i2.amount amount,\n                    i.game_id game_id\n                from items i \n                left join inventories i2 on i.id = i2.item_id\n                WHERE i.game_id = $1\n                limit $2 offset $3\n            ",
+  "describe": {
+    "columns": [
+      {
+        "name": "id",
+        "ordinal": 0,
+        "type_info": "Text"
+      },
+      {
+        "name": "item_name",
+        "ordinal": 1,
+        "type_info": "Text"
+      },
+      {
+        "name": "item_picture",
+        "ordinal": 2,
+        "type_info": "Text"
+      },
+      {
+        "name": "item_id",
+        "ordinal": 3,
+        "type_info": "Text"
+      },
+      {
+        "name": "amount",
+        "ordinal": 4,
+        "type_info": "Integer"
+      },
+      {
+        "name": "game_id",
+        "ordinal": 5,
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Right": 3
+    },
+    "nullable": [
+      false,
+      false,
+      true,
+      false,
+      true,
+      false
+    ]
+  },
+  "hash": "7502ec07ec54f3206ca723d15c88259caccecf14b25bfa4af55e3a09a7199f78"
+}

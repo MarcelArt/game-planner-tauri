@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "\n                update recipes\n                set output_amount = $1, item_id = $2\n                where id = $3\n            ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 3
+    },
+    "nullable": []
+  },
+  "hash": "e802cd0399f23cfa7354b7e0ff2290fc0e1ae244e2becee5fa8da471a8a71c33"
+}

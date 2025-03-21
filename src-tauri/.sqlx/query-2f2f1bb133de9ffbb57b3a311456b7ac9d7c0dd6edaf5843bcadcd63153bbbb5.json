@@ -1,0 +1,32 @@
+{
+  "db_name": "SQLite",
+  "query": "select * from recipes limit $1 offset $2",
+  "describe": {
+    "columns": [
+      {
+        "name": "id",
+        "ordinal": 0,
+        "type_info": "Text"
+      },
+      {
+        "name": "item_id",
+        "ordinal": 1,
+        "type_info": "Text"
+      },
+      {
+        "name": "output_amount",
+        "ordinal": 2,
+        "type_info": "Integer"
+      }
+    ],
+    "parameters": {
+      "Right": 2
+    },
+    "nullable": [
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "2f2f1bb133de9ffbb57b3a311456b7ac9d7c0dd6edaf5843bcadcd63153bbbb5"
+}
