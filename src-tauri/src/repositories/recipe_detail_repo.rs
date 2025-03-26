@@ -75,4 +75,21 @@ impl RecipeDetailRepo {
         .fetch_one(&self.db)
         .await
     }
+
+    pub async fn get_by_game_id(&self, game_id: String) -> Result<Vec<RecipeDetail>, sqlx::Error> {
+        sqlx::query_as!(
+            RecipeDetail,
+            "
+                select
+                    rd.*
+                from recipe_details rd 
+                join items i on rd.item_id = i.id
+                join games g on i.game_id = g.id
+                where game_id = $1
+            ",
+            game_id,
+        )
+        .fetch_all(&self.db)
+        .await
+    }
 }

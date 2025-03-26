@@ -222,4 +222,23 @@ impl RecipeRepo {
         tx.commit().await?;
         Ok(())
     }
+
+    pub async fn get_by_game_id(&self, game_id: String) -> Result<Vec<Recipe>, sqlx::Error> {
+        let recipes = sqlx::query_as!(
+            Recipe,
+            "
+                select
+                     r.*
+                from recipes r 
+                join items i on r.item_id = i.id
+                join games g on i.game_id = g.id
+                where game_id = $1
+            ",
+            game_id,
+        )
+        .fetch_all(&self.db)
+        .await?;
+
+        Ok(recipes)
+    }
 }
